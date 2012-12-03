@@ -1,0 +1,4 @@
+mediawiki-config
+================
+
+mediawiki configurations
