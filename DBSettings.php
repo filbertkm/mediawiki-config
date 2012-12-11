@@ -54,7 +54,7 @@ $wgLBFactoryConf = array(
 	'hostsByName' => array(
 		'localhost' => '127.0.0.1:3306',
 		'linode2' => $wmgDBserver2,
-		'linode3' => wmgDBserver3,
+		'linode3' => $wmgDBserver3,
 	),
 
 	// Set up as fake master, because there are no slaves.
