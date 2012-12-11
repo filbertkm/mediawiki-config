@@ -16,10 +16,24 @@ $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
 
+// see https://github.com/filbertkm/MultiWiki
+require_once( "$IP/extensions/MultiWiki/MultiWiki.php" );
+
 if ( $wmgUseAbuseFilter ) {
+	require_once( "$IP/extensions/AntiSpoof/AntiSpoof.php" );
 	require_once( "$IP/extensions/AbuseFilter/AbuseFilter.php" );
+
 	$wgAbuseFilterCentralDB = 'abusefilter';
 	$wgAbuseFilterIsCentral = true;
+
+	$wgGroupPermissions['sysop']['abusefilter-modify'] = true;
+	$wgGroupPermissions['*']['abusefilter-log-detail'] = true;
+	$wgGroupPermissions['*']['abusefilter-view'] = true;
+	$wgGroupPermissions['*']['abusefilter-log'] = true;
+	$wgGroupPermissions['sysop']['abusefilter-private'] = true;
+	$wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
+	$wgGroupPermissions['sysop']['abusefilter-revert'] = true;
+
 }
 
 if ( $wmgUseCentralAuth ) {
@@ -107,6 +121,8 @@ if ( $wmgUseWikibaseRepo ) {
 		$wgExtraNamespaces[WB_NS_ITEM_TALK] = 'Item_talk';
 
 		$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = WB_NS_ITEM;
+
+		$wgWBSettings['withoutTermSearchKey'] = true;
 	}
 }
 

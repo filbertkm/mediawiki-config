@@ -4,7 +4,8 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 		die( 'Illegal entry point' );
 }
 
-## Database settings
+$wgDBTableOptions   = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
+
 $wgLBFactoryConf = array(
 	// In order to seamlessly access a remote wiki, as the pollForChanges script needs to do,
 	// LBFactory_Multi must be used.
@@ -36,6 +37,7 @@ $wgLBFactoryConf = array(
 		'enwiki' => 's1',
 		'arwiki' => 's1',
 		'dewiki' => 's1',
+		'huwiki' => 's1',
 		'enwikidata' => 's2',
 		'testwikidata' => 's2',
 		'centralauth' => 's2',
@@ -52,8 +54,22 @@ $wgLBFactoryConf = array(
 	'hostsByName' => array(
 		'localhost' => '127.0.0.1:3306',
 		'linode2' => $wmgDBserver2,
+		'linode3' => wmgDBserver3,
 	),
 
 	// Set up as fake master, because there are no slaves.
 	'masterTemplateOverrides' => array( 'fakeMaster' => true ),
+
+	'externalLoads' => array(
+		'cluster25' => array(
+			$wmgDBserver3 => 1,
+			$wmgDBserver2 => 3,
+		),
+	),
+
+	'templateOverridesByCluster' => array(
+		'cluster25' => array( 'blobs table' => 'blobs_cluster25' ),
+	),
 );
+
+$wgDefaultExternalStore = 'DB://cluster25';

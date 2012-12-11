@@ -18,7 +18,7 @@ $wgConf->suffixes = array(
 );
 
 
-$wgConf->wikis = array( 'enwikidata', 'testwikidata', 'arwiki', 'dewiki', 'enwiki' );
+$wgConf->wikis = array( 'enwikidata', 'testwikidata', 'arwiki', 'dewiki', 'enwiki', 'huwiki' );
 
 $wgConf->settings = array(
 	'wgSitename' => array(
@@ -27,6 +27,7 @@ $wgConf->settings = array(
 		'enwiki' => 'TestClient',
 		'arwiki' => 'TestClient',
 		'dewiki' => 'TestClient',
+		'huwiki' => 'TestClient',
 	),
 	'wgServer' => array(
 		'enwikidata' => "http://en-wikidata.$wmgSiteDomain",
@@ -34,6 +35,7 @@ $wgConf->settings = array(
 		'enwiki' => "http://en-wiki.$wmgSiteDomain",
 		'arwiki' => "http://ar-wiki.$wmgSiteDomain",
 		'dewiki' => "http://de-wiki.$wmgSiteDomain",
+		'huwiki' => "http://hu-wiki.$wmgSiteDomain",
 	),
 	'wgDBserver' => array(
 		'enwikidata' => $wmgDBserver2,
@@ -41,6 +43,7 @@ $wgConf->settings = array(
 		'dewiki' => 'localhost',
 		'enwiki' => 'localhost',
 		'arwiki' => 'localhost',
+		'huwiki' => 'localhost',
 	),
 	'wgDBname' => array(
 		'enwikidata' => 'enwikidata',
@@ -48,6 +51,15 @@ $wgConf->settings = array(
 		'enwiki' => 'enwiki',
 		'arwiki' => 'arwiki',
 		'dewiki' => 'dewiki',
+		'huwiki' => 'huwiki',
+	),
+	'wgExternalStores' => array(
+		'enwikidata' => array( 'DB' ),
+		'testwikidata' => array( 'DB' ),
+		'enwiki' => array( 'DB' ),
+		'arwiki' => array( 'DB' ),
+		'dewiki' => array( 'DB' ),
+		'huwiki' => array( 'DB' ),
 	),
 	'wgLanguageCode' => array(
 		'enwikidata' => 'en',
@@ -55,6 +67,7 @@ $wgConf->settings = array(
 		'enwiki' => 'en',
 		'dewiki' => 'de',
 		'arwiki' => 'ar',
+		'huwiki' => 'hu',
 	),
 	'wgLogo' => array(
 		'enwikidata' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/WikidataRepo.png/120px-WikidataRepo.png',
@@ -62,6 +75,7 @@ $wgConf->settings = array(
 		'enwiki' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/WikidataRepo.png/120px-WikidataRepo.png',
 		'arwiki' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/WikidataRepo.png/120px-WikidataRepo.png',
 		'dewiki' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/WikidataRepo.png/120px-WikidataRepo.png',
+		'huwiki' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/WikidataRepo.png/120px-WikidataRepo.png',
 	),
 	'wgContentHandlerUseDB' => array(
 		'enwikidata' => true,
@@ -69,6 +83,7 @@ $wgConf->settings = array(
 		'enwiki' => false,
 		'dewiki' => false,
 		'arwiki' => false,
+		'huwiki' => false,
 	),
 	// debug
 	'wmgDebugMode' => array(
@@ -77,6 +92,7 @@ $wgConf->settings = array(
 		'enwiki' => 'debug',
 		'arwiki' => 'debug',
 		'dewiki' => 'debug',
+		'huwiki' => 'debug',
 	),
 	// extensions
 	'wmgUseCentralAuth' => array(
@@ -85,6 +101,7 @@ $wgConf->settings = array(
 		'enwiki' => true,
 		'arwiki' => true,
 		'dewiki' => true,
+		'huwiki' => true,
 	),
 	'wmgUseAbuseFilter' => array(
 		'enwikidata' => false,
@@ -92,6 +109,7 @@ $wgConf->settings = array(
 		'enwiki' => false,
 		'arwiki' => false,
 		'dewiki' => false,
+		'huwiki' => false,
 	),
 	'wmgUseUniversalLanguageSelector' => array(
 		'enwikidata' => true,
@@ -99,6 +117,7 @@ $wgConf->settings = array(
 		'enwiki' => false,
 		'arwiki' => false,
 		'dewiki' => false,
+		'huwiki' => false,
 	),
 	'wmgUseWikibaseRepo' => array(
 		'enwikidata' => true,
@@ -106,6 +125,7 @@ $wgConf->settings = array(
 		'enwiki' => false,
 		'dewiki' => false,
 		'arwiki' => false,
+		'huwiki' => false,
 	),
 	'wmgUseWikibaseClient' => array(
 		'enwikidata' => false,
@@ -113,6 +133,7 @@ $wgConf->settings = array(
 		'enwiki' => true,
 		'dewiki' => true,
 		'arwiki' => true,
+		'huwiki' => false,
 	),
 	'wmgWikibaseItemNamespace' => array(
 		'enwikidata' => 'item',
@@ -120,6 +141,7 @@ $wgConf->settings = array(
 		'enwiki' => 'item',
 		'dewiki' => 'item',
 		'arwiki' => 'item',
+		'huwiki' => 'item',
 	),
 	'wmgUseDeployment' => array(
 		'testwikidata' => true,
@@ -127,13 +149,15 @@ $wgConf->settings = array(
 		'enwiki' => false,
 		'arwiki' => false,
 		'dewiki' => false,
+		'huwiki' => false,
 	),
 	'wmgWikibaseExperimental' => array(
-		'enwikidata' => false, //true,
+		'enwikidata' => true, //true,
 		'testwikidata' => false,
 		'enwiki' => true,
 		'arwiki' => false,
 		'dewiki' => false,
+		'huwiki' => false,
 	),
 );
 
