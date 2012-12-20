@@ -49,7 +49,6 @@ $wgMainCacheType    = CACHE_MEMCACHED;
 $wgMemCachedServers = array( '127.0.0.1:11211' );
 
 ## Localisation cache
-$wgLocalisationCacheConf['storeDirectory'] = "$IP/cache/l10n";
 $wgLocalisationCacheConf['manualRecache'] = true;
 
 ## To enable image uploads, make sure the 'images' directory
@@ -71,11 +70,6 @@ $wgShellLocale = "en_US.utf8";
 ## images/temp, and make them all writable. Then uncomment
 ## this, if it's not already uncommented:
 #$wgHashedUploadDirectory = false;
-
-## Set $wgCacheDirectory to a writable directory on the web server
-## to make your wiki go slightly faster. The directory should not
-## be publically accessible from the web.
-#$wgCacheDirectory = "$IP/cache";
 
 $wgSecretKey = "362f52aa65f94f306ec758c6b8e5f6c30293774dc8c23e7d3fac6c362e762d00";
 

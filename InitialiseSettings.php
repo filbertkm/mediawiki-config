@@ -77,6 +77,14 @@ $wgConf->settings = array(
 		'dewiki' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/WikidataRepo.png/120px-WikidataRepo.png',
 		'huwiki' => 'http://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/WikidataRepo.png/120px-WikidataRepo.png',
 	),
+	'wgCacheDirectory' => array(
+		'enwikidata' => '/tmp/mw-cache/enwikidata',
+		'testwikidata' => '/tmp/mw-cache/testwikidata',
+		'enwiki' => '/tmp/mw-cache/enwiki',
+		'arwiki' => '/tmp/mw-cache/arwiki',
+		'dewiki' => '/tmp/mw-cache/dewiki',
+		'huwiki' => '/tmp/mw-cache/huwiki',
+	),
 	'wgContentHandlerUseDB' => array(
 		'enwikidata' => true,
 		'testwikidata' => true,
