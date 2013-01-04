@@ -38,12 +38,19 @@ $wgConf->settings = array(
 		'huwiki' => "http://hu-wiki.$wmgSiteDomain",
 	),
 	'wgDBserver' => array(
+		'default' => 'localhost',
 		'enwikidata' => $wmgDBserver2,
 		'testwikidata' => $wmgDBserver2,
-		'dewiki' => 'localhost',
+/*		'dewiki' => 'localhost',
 		'enwiki' => 'localhost',
 		'arwiki' => 'localhost',
 		'huwiki' => 'localhost',
+*/
+	),
+	'wgDBprefix' => array(
+		'default' => '',
+		'testwikidata' => 'testdb_',
+		'arwiki' => 'ar_',
 	),
 	'wgDBname' => array(
 		'enwikidata' => 'enwikidata',
@@ -54,18 +61,21 @@ $wgConf->settings = array(
 		'huwiki' => 'huwiki',
 	),
 	'wgExternalStores' => array(
-		'enwikidata' => array( 'DB' ),
+		'default' => array( 'DB' ),
+/*		'enwikidata' => array( 'DB' ),
 		'testwikidata' => array( 'DB' ),
 		'enwiki' => array( 'DB' ),
 		'arwiki' => array( 'DB' ),
 		'dewiki' => array( 'DB' ),
 		'huwiki' => array( 'DB' ),
+*/
 	),
 	'wgLanguageCode' => array(
-		'enwikidata' => 'en',
+		'default' => 'en',
+/*		'enwikidata' => 'en',
 		'testwikidata' => 'en',
 		'enwiki' => 'en',
-		'dewiki' => 'de',
+*/		'dewiki' => 'de',
 		'arwiki' => 'ar',
 		'huwiki' => 'hu',
 	),
@@ -104,12 +114,14 @@ $wgConf->settings = array(
 	),
 	// extensions
 	'wmgUseCentralAuth' => array(
-		'enwikidata' => true,
+		'default' => true,
+/*		'enwikidata' => true,
 		'testwikidata' => true,
 		'enwiki' => true,
 		'arwiki' => true,
 		'dewiki' => true,
 		'huwiki' => true,
+*/
 	),
 	'wmgUseAbuseFilter' => array(
 		'enwikidata' => false,
@@ -126,6 +138,9 @@ $wgConf->settings = array(
 		'arwiki' => false,
 		'dewiki' => false,
 		'huwiki' => false,
+	),
+	'wmgUseWikibase' => array(
+		'default' => true,
 	),
 	'wmgUseWikibaseRepo' => array(
 		'enwikidata' => true,
@@ -153,19 +168,27 @@ $wgConf->settings = array(
 	),
 	'wmgUseDeployment' => array(
 		'testwikidata' => true,
-		'enwikidata' => false,
+		'enwikidata' => true,
 		'enwiki' => false,
 		'arwiki' => false,
 		'dewiki' => false,
 		'huwiki' => false,
 	),
 	'wmgWikibaseExperimental' => array(
-		'enwikidata' => true, //true,
+		'enwikidata' => false, //true,
 		'testwikidata' => false,
 		'enwiki' => true,
 		'arwiki' => false,
 		'dewiki' => false,
 		'huwiki' => false,
+	),
+	'wmgUseWikimaniaScholarships' => array(
+		'default' => false,
+		'enwiki' => true,
+	),
+	'wmgUseMultiWiki' => array(
+		'default' => true,
+		'testwikidata' => false,
 	),
 );
 

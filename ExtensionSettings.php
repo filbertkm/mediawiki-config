@@ -6,6 +6,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 
 require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
 require_once( "$IP/extensions/Cite/Cite.php" );
+require_once( "$IP/extensions/cldr/cldr.php" );
 require_once( "$IP/extensions/Vector/Vector.php" );
 
 $wgVectorFeatures['collapsibletabs']['user'] = true;
@@ -16,8 +17,14 @@ $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
 
-// see https://github.com/filbertkm/MultiWiki
-require_once( "$IP/extensions/MultiWiki/MultiWiki.php" );
+require_once( "$IP/extensions/CategoryTree/CategoryTree.php" );
+
+require_once( "$IP/extensions/SiteMatrix/SiteMatrix.php" );
+
+if ( $wmgUseMultiWiki ) {
+	// see https://github.com/filbertkm/MultiWiki
+	require_once( "$IP/extensions/MultiWiki/MultiWiki.php" );
+}
 
 if ( $wmgUseAbuseFilter ) {
 	require_once( "$IP/extensions/AntiSpoof/AntiSpoof.php" );
@@ -56,109 +63,110 @@ if ( $wmgUseCentralAuth ) {
 }
 
 if ( $wmgUseUniversalLanguageSelector ) {
-	if ( $wmgUseDeployment ) {
-		require_once( "$IP/extensions/ULS-1.21/UniversalLanguageSelector.php" );
-	} else {
-		require_once( "$IP/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php" );
-	}
+	require_once( "$IP/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php" );
 }
 
-if ( $wmgUseWikibaseRepo ) {
-    if ( $wmgWikibaseExperimental ) {
-        define( 'WB_EXPERIMENTAL_FEATURES', 1 );
-    }
-
-	if ( $wmgUseDeployment ) {
-		require_once( "$IP/extensions/Diff-1.21/Diff.php" );
-		require_once( "$IP/extensions/Wikibase-1.21/lib/WikibaseLib.php" );
-		require_once( "$IP/extensions/Wikibase-1.21/repo/Wikibase.php" );
-	} else {
-		require_once( "$IP/extensions/DataValues/DataValues.php" );
-		require_once( "$IP/extensions/Diff/Diff.php" );
-		require_once( "$IP/extensions/Wikibase/lib/WikibaseLib.php" );
-		require_once( "$IP/extensions/Wikibase/repo/Wikibase.php" );
-	}
-
-	// Define custom namespaces. Use these exact constant names.
-	$baseNs = 100;
-
-	define( 'WB_NS_PROPERTY', $baseNs + 2 );
-	define( 'WB_NS_PROPERTY_TALK', $baseNs + 3 );
-	define( 'WB_NS_QUERY', $baseNs + 4 );
-	define( 'WB_NS_QUERY_TALK', $baseNs + 5 );
-
-	$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_PROPERTY] = WB_NS_PROPERTY;
-	$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_QUERY] = WB_NS_QUERY;
-
-	$wgContentHandlerUseDB = true;
-
-	$wgWBSettings['apiInDebug'] = false;
-	$wgWBSettings['apiInTest'] = false;
-	$wgWBSettings['apiWithRights'] = true;
-	$wgWBSettings['apiWithTokens'] = false;
-
-	$wgGroupPermissions['wbeditor']['item-set'] = false;
-
-	if ( $wmgWikibaseItemNamespace === 'main' ) {
-
-		// Register extra namespaces.
-		$wgExtraNamespaces[WB_NS_PROPERTY] = 'Property';
-		$wgExtraNamespaces[WB_NS_PROPERTY_TALK] = 'Property_talk';
-		$wgExtraNamespaces[WB_NS_QUERY] = 'Query';
-		$wgExtraNamespaces[WB_NS_QUERY_TALK] = 'Query_talk';
-
-		$wgNamespaceAliases['Item'] = NS_MAIN;
-		$wgNamespaceAliases['Item_talk'] = NS_TALK;
-
-		// Tell Wikibase which namespace to use for which kind of entity
-		$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = NS_MAIN;
-	} else {
-		define( 'WB_NS_ITEM', $baseNs );
-		define( 'WB_NS_ITEM_TALK', $baseNs + 1 );
-
-		// Register extra namespaces.
-		$wgExtraNamespaces[WB_NS_ITEM] = 'Item';
-		$wgExtraNamespaces[WB_NS_ITEM_TALK] = 'Item_talk';
-
-		$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = WB_NS_ITEM;
-
-		$wgWBSettings['withoutTermSearchKey'] = true;
-	}
-}
-
-if ( $wmgUseWikibaseClient ) {
-    if ( $wmgWikibaseExperimental ) {
-		define( 'WB_EXPERIMENTAL_FEATURES', 1 );
-	}
+if ( $wmgUseWikibase ) {
 
 	require_once( "$IP/extensions/DataValues/DataValues.php" );
-    require_once( "$IP/extensions/DataValues/ValueParsers/ValueParsers.php" );
 	require_once( "$IP/extensions/Diff/Diff.php" );
 	require_once( "$IP/extensions/Wikibase/lib/WikibaseLib.php" );
-	require_once( "$IP/extensions/Wikibase/client/WikibaseClient.php" );
 
-	$wgWBSettings['repoUrl'] = "//en-wikidata.$wmgSiteDomain";
-//	$wgWBSettings['repoScriptPath'] = '';
-//	$wgWBSettings['repoArticlePath'] = "/wiki/$1";
+	function setWikibaseNamespaces() {
+		global $wgWBSettings, $wmgWikibaseItemNamespace, $wgWBNamespaces, $wgNamespaceAliases;
 
-	// The global site ID by which this wiki is known on the repo.
-	$wgWBSettings['siteGlobalID'] = $wgDBname;
+	    // Define custom namespaces. Use these exact constant names.
+	    $baseNs = 100;
 
-	// Database name of the repository, for use by the pollForChanges script.
-	// This requires the given database name to be known to LBFactory, see
-	// $wgLBFactoryConf below.
-	$wgWBSettings['changesDatabase'] = "enwikidata";
-	$wgWBSettings['repoDatabase'] = "enwikidata";
+		if ( $wmgWikibaseItemNamespace === 'main' ) {
+	        $wgNamespaceAliases['Item'] = NS_MAIN;
+	        $wgNamespaceAliases['Item_talk'] = NS_TALK;
 
-	if ( $wmgWikibaseItemNamespace === 'main' ) {
-		$wgWBSettings['repoNamespaces'] = array(
-		//  'wikibase-item' => '',
-		    'wikibase-property' => 'Property'
-		);
-	} else {
-		$wgWBSettings['repoNamespaces'] = array(
-			'wikibase-item' => 'Item',
-			'wikibase-property' => 'Property'
-		);
+	        // Tell Wikibase which namespace to use for which kind of entity
+	        $wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = NS_MAIN;
+	    } else {
+	        define( 'WB_NS_ITEM', $baseNs );
+	        define( 'WB_NS_ITEM_TALK', $baseNs + 1 );
+
+	        // Register extra namespaces.
+	        $wgWBNamespaces[WB_NS_ITEM] = 'Item';
+	        $wgWBNamespaces[WB_NS_ITEM_TALK] = 'Item_talk';
+
+	        $wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = WB_NS_ITEM;
+	    }
+
+        define( 'WB_NS_PROPERTY', $baseNs + 2 );
+        define( 'WB_NS_PROPERTY_TALK', $baseNs + 3 );
+        define( 'WB_NS_QUERY', $baseNs + 4 );
+        define( 'WB_NS_QUERY_TALK', $baseNs + 5 );
+
+        $wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_PROPERTY] = WB_NS_PROPERTY;
+        $wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_QUERY] = WB_NS_QUERY;
+
+        // Register extra namespaces.
+        $wgWBNamespaces[WB_NS_PROPERTY] = 'Property';
+        $wgWBNamespaces[WB_NS_PROPERTY_TALK] = 'Property_talk';
+        $wgWBNamespaces[WB_NS_QUERY] = 'Query';
+        $wgWBNamespaces[WB_NS_QUERY_TALK] = 'Query_talk';
 	}
+
+	if ( $wmgUseWikibaseRepo ) {
+	    if ( $wmgWikibaseExperimental ) {
+	        define( 'WB_EXPERIMENTAL_FEATURES', 1 );
+	    }
+
+		require_once( "$IP/extensions/Wikibase/repo/Wikibase.php" );
+
+		setWikibaseNamespaces();
+
+		$wgExtraNamespaces = array_merge( $wgExtraNamespaces, $wgWBNamespaces );
+
+		$wgContentHandlerUseDB = true;
+
+		$wgWBSettings['withoutTermSearchKey'] = true;
+
+		$wgWBSettings['apiInDebug'] = false;
+		$wgWBSettings['apiInTest'] = false;
+		$wgWBSettings['apiWithRights'] = true;
+		$wgWBSettings['apiWithTokens'] = false;
+
+		$wgGroupPermissions['wbeditor']['item-set'] = false;
+	}
+
+	if ( $wmgUseWikibaseClient ) {
+	    if ( $wmgWikibaseExperimental ) {
+			define( 'WB_EXPERIMENTAL_FEATURES', 1 );
+		}
+
+		require_once( "$IP/extensions/Wikibase/client/WikibaseClient.php" );
+
+		$wgWBSettings['repoUrl'] = "//en-wikidata.$wmgSiteDomain";
+
+		// The global site ID by which this wiki is known on the repo.
+		$wgWBSettings['siteGlobalID'] = $wgDBname;
+
+		// Database name of the repository, for use by the pollForChanges script.
+		// This requires the given database name to be known to LBFactory, see
+		// $wgLBFactoryConf below.
+		$wgWBSettings['changesDatabase'] = "enwikidata";
+		$wgWBSettings['repoDatabase'] = "enwikidata";
+
+		setWikibaseNamespaces();
+
+		if ( $wmgWikibaseItemNamespace === 'main' ) {
+			$wgWBSettings['repoNamespaces'] = array(
+			//  'wikibase-item' => '',
+			    'wikibase-property' => 'Property'
+			);
+		} else {
+			$wgWBSettings['repoNamespaces'] = array(
+				'wikibase-item' => 'Item',
+				'wikibase-property' => 'Property'
+			);
+		}
+	}
+}
+
+if ( $wmgUseWikimaniaScholarships ) {
+	require_once( "$IP/extensions/WikimaniaScholarships/WikimaniaScholarships.php" );
 }
