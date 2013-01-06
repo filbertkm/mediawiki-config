@@ -4,9 +4,12 @@ if ( !defined( 'MEDIAWIKI' ) ) {
         die( 'Invalid entry point.' );
 }
 
+// extensions enabled by default on all wikis
 require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
 require_once( "$IP/extensions/Cite/Cite.php" );
 require_once( "$IP/extensions/cldr/cldr.php" );
+require_once( "$IP/extensions/CategoryTree/CategoryTree.php" );
+require_once( "$IP/extensions/SiteMatrix/SiteMatrix.php" );
 require_once( "$IP/extensions/Vector/Vector.php" );
 
 $wgVectorFeatures['collapsibletabs']['user'] = true;
@@ -16,10 +19,6 @@ require_once( "$IP/extensions/WikiEditor/WikiEditor.php" );
 $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
-
-require_once( "$IP/extensions/CategoryTree/CategoryTree.php" );
-
-require_once( "$IP/extensions/SiteMatrix/SiteMatrix.php" );
 
 if ( $wmgUseMultiWiki ) {
 	// see https://github.com/filbertkm/MultiWiki
@@ -85,7 +84,8 @@ if ( $wmgUseWikibase ) {
 	        // Tell Wikibase which namespace to use for which kind of entity
 	        $wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = NS_MAIN;
 	    } else {
-	        define( 'WB_NS_ITEM', $baseNs );
+	    	// default to items in Item namespace
+		    define( 'WB_NS_ITEM', $baseNs );
 	        define( 'WB_NS_ITEM_TALK', $baseNs + 1 );
 
 	        // Register extra namespaces.
@@ -119,7 +119,7 @@ if ( $wmgUseWikibase ) {
 
 		setWikibaseNamespaces();
 
-		$wgExtraNamespaces = array_merge( $wgExtraNamespaces, $wgWBNamespaces );
+		$wgExtraNamespaces = $wgWBNamespaces + $wgExtraNamespaces;
 
 		$wgContentHandlerUseDB = true;
 
@@ -165,8 +165,4 @@ if ( $wmgUseWikibase ) {
 			);
 		}
 	}
-}
-
-if ( $wmgUseWikimaniaScholarships ) {
-	require_once( "$IP/extensions/WikimaniaScholarships/WikimaniaScholarships.php" );
 }

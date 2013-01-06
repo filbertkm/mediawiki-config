@@ -182,10 +182,6 @@ $wgConf->settings = array(
 		'dewiki' => false,
 		'huwiki' => false,
 	),
-	'wmgUseWikimaniaScholarships' => array(
-		'default' => false,
-		'enwiki' => true,
-	),
 	'wmgUseMultiWiki' => array(
 		'default' => true,
 		'testwikidata' => false,

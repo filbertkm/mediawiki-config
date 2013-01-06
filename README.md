@@ -5,7 +5,7 @@ Checkout a copy of Wikimedia's configuration settings:
 
 https://gerrit.wikimedia.org/r/gitweb?p=operations/mediawiki-config.git;n,z
 
-We need the stuff in:
+We put the stuff in:
 
 * /live-1.5 (specifically index.php and to symlink the extensions, skins, and other directories)
 * /multiversion
