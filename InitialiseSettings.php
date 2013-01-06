@@ -139,9 +139,6 @@ $wgConf->settings = array(
 		'dewiki' => false,
 		'huwiki' => false,
 	),
-	'wmgUseWikibase' => array(
-		'default' => true,
-	),
 	'wmgUseWikibaseRepo' => array(
 		'enwikidata' => true,
 		'testwikidata' => true,

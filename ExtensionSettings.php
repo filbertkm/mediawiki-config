@@ -65,7 +65,11 @@ if ( $wmgUseUniversalLanguageSelector ) {
 	require_once( "$IP/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php" );
 }
 
-if ( $wmgUseWikibase ) {
+if ( $wmgUseWikibaseRepo && $wmgUseWikibaseClient ) {
+	die( "<strong>Error</strong>: Wikibase Repo and Client should not be enabled on the same wiki!" );
+}
+
+if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 
 	require_once( "$IP/extensions/DataValues/DataValues.php" );
 	require_once( "$IP/extensions/Diff/Diff.php" );
