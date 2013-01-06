@@ -1,7 +1,7 @@
 <?php
 
 if ( !defined( 'MEDIAWIKI' ) ) {
-        die( 'Invalid entry point.' );
+		die( 'Invalid entry point.' );
 }
 
 // extensions enabled by default on all wikis
@@ -75,50 +75,50 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 	require_once( "$IP/extensions/Diff/Diff.php" );
 	require_once( "$IP/extensions/Wikibase/lib/WikibaseLib.php" );
 
+	if ( $wmgWikibaseExperimental ) {
+		define( 'WB_EXPERIMENTAL_FEATURES', 1 );
+	}
+
 	function setWikibaseNamespaces() {
 		global $wgWBSettings, $wmgWikibaseItemNamespace, $wgWBNamespaces, $wgNamespaceAliases;
 
-	    // Define custom namespaces. Use these exact constant names.
-	    $baseNs = 100;
+		// Define custom namespaces. Use these exact constant names.
+		$baseNs = 100;
 
 		if ( $wmgWikibaseItemNamespace === 'main' ) {
-	        $wgNamespaceAliases['Item'] = NS_MAIN;
-	        $wgNamespaceAliases['Item_talk'] = NS_TALK;
+			$wgNamespaceAliases['Item'] = NS_MAIN;
+			$wgNamespaceAliases['Item_talk'] = NS_TALK;
 
-	        // Tell Wikibase which namespace to use for which kind of entity
-	        $wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = NS_MAIN;
-	    } else {
-	    	// default to items in Item namespace
-		    define( 'WB_NS_ITEM', $baseNs );
-	        define( 'WB_NS_ITEM_TALK', $baseNs + 1 );
+			// Tell Wikibase which namespace to use for which kind of entity
+			$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = NS_MAIN;
+		} else {
+			// default to items in Item namespace
+			define( 'WB_NS_ITEM', $baseNs );
+			define( 'WB_NS_ITEM_TALK', $baseNs + 1 );
 
-	        // Register extra namespaces.
-	        $wgWBNamespaces[WB_NS_ITEM] = 'Item';
-	        $wgWBNamespaces[WB_NS_ITEM_TALK] = 'Item_talk';
+			// Register extra namespaces.
+			$wgWBNamespaces[WB_NS_ITEM] = 'Item';
+			$wgWBNamespaces[WB_NS_ITEM_TALK] = 'Item_talk';
 
-	        $wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = WB_NS_ITEM;
-	    }
+			$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = WB_NS_ITEM;
+		}
 
-        define( 'WB_NS_PROPERTY', $baseNs + 2 );
-        define( 'WB_NS_PROPERTY_TALK', $baseNs + 3 );
-        define( 'WB_NS_QUERY', $baseNs + 4 );
-        define( 'WB_NS_QUERY_TALK', $baseNs + 5 );
+		define( 'WB_NS_PROPERTY', $baseNs + 2 );
+		define( 'WB_NS_PROPERTY_TALK', $baseNs + 3 );
+		define( 'WB_NS_QUERY', $baseNs + 4 );
+		define( 'WB_NS_QUERY_TALK', $baseNs + 5 );
 
-        $wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_PROPERTY] = WB_NS_PROPERTY;
-        $wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_QUERY] = WB_NS_QUERY;
+		$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_PROPERTY] = WB_NS_PROPERTY;
+		$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_QUERY] = WB_NS_QUERY;
 
-        // Register extra namespaces.
-        $wgWBNamespaces[WB_NS_PROPERTY] = 'Property';
-        $wgWBNamespaces[WB_NS_PROPERTY_TALK] = 'Property_talk';
-        $wgWBNamespaces[WB_NS_QUERY] = 'Query';
-        $wgWBNamespaces[WB_NS_QUERY_TALK] = 'Query_talk';
+		// Register extra namespaces.
+		$wgWBNamespaces[WB_NS_PROPERTY] = 'Property';
+		$wgWBNamespaces[WB_NS_PROPERTY_TALK] = 'Property_talk';
+		$wgWBNamespaces[WB_NS_QUERY] = 'Query';
+		$wgWBNamespaces[WB_NS_QUERY_TALK] = 'Query_talk';
 	}
 
 	if ( $wmgUseWikibaseRepo ) {
-	    if ( $wmgWikibaseExperimental ) {
-	        define( 'WB_EXPERIMENTAL_FEATURES', 1 );
-	    }
-
 		require_once( "$IP/extensions/Wikibase/repo/Wikibase.php" );
 
 		setWikibaseNamespaces();
@@ -138,10 +138,6 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 	}
 
 	if ( $wmgUseWikibaseClient ) {
-	    if ( $wmgWikibaseExperimental ) {
-			define( 'WB_EXPERIMENTAL_FEATURES', 1 );
-		}
-
 		require_once( "$IP/extensions/Wikibase/client/WikibaseClient.php" );
 
 		$wgWBSettings['repoUrl'] = "//en-wikidata.$wmgSiteDomain";
@@ -160,7 +156,7 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 		if ( $wmgWikibaseItemNamespace === 'main' ) {
 			$wgWBSettings['repoNamespaces'] = array(
 			//  'wikibase-item' => '',
-			    'wikibase-property' => 'Property'
+				'wikibase-property' => 'Property'
 			);
 		} else {
 			$wgWBSettings['repoNamespaces'] = array(
