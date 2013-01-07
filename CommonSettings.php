@@ -113,7 +113,7 @@ $wgGroupPermissions['sysop']['suppressrevision'] = true;
 $wgGroupPermissions['sysop']['editinterface'] = true;
 $wgGroupPermissions['sysop']['suppressionlog'] = true;
 
-if ( in_array( $wmgDebugMode, array( 'debug', 'testing' ) ) ) {
+if ( $wmgDebugMode ) {
 	require_once( "$IP/../DebugSettings.php" );
 }
 

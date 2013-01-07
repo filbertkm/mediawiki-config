@@ -7,6 +7,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 // extensions enabled by default on all wikis
 require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
 require_once( "$IP/extensions/Cite/Cite.php" );
+require_once( "$IP/extensions/CheckUser/CheckUser.php" );
 require_once( "$IP/extensions/cldr/cldr.php" );
 require_once( "$IP/extensions/CategoryTree/CategoryTree.php" );
 require_once( "$IP/extensions/SiteMatrix/SiteMatrix.php" );
@@ -75,17 +76,13 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 	require_once( "$IP/extensions/Diff/Diff.php" );
 	require_once( "$IP/extensions/Wikibase/lib/WikibaseLib.php" );
 
-	if ( $wmgWikibaseExperimental ) {
-		define( 'WB_EXPERIMENTAL_FEATURES', 1 );
-	}
-
-	function setWikibaseNamespaces() {
-		global $wgWBSettings, $wmgWikibaseItemNamespace, $wgWBNamespaces, $wgNamespaceAliases;
+	function setWikibaseNamespaces( $main = false ) {
+		global $wgWBSettings, $wgWBNamespaces, $wgNamespaceAliases;
 
 		// Define custom namespaces. Use these exact constant names.
 		$baseNs = 100;
 
-		if ( $wmgWikibaseItemNamespace === 'main' ) {
+		if ( $main ) {
 			$wgNamespaceAliases['Item'] = NS_MAIN;
 			$wgNamespaceAliases['Item_talk'] = NS_TALK;
 
@@ -118,10 +115,14 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 		$wgWBNamespaces[WB_NS_QUERY_TALK] = 'Query_talk';
 	}
 
+	setWikibaseNamespaces( $wmgWikibaseItemsInMainNS );
+
+    if ( $wmgWikibaseExperimental ) {
+        define( 'WB_EXPERIMENTAL_FEATURES', 1 );
+    }
+
 	if ( $wmgUseWikibaseRepo ) {
 		require_once( "$IP/extensions/Wikibase/repo/Wikibase.php" );
-
-		setWikibaseNamespaces();
 
 		$wgExtraNamespaces = $wgWBNamespaces + $wgExtraNamespaces;
 
@@ -150,8 +151,6 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 		// $wgLBFactoryConf below.
 		$wgWBSettings['changesDatabase'] = "enwikidata";
 		$wgWBSettings['repoDatabase'] = "enwikidata";
-
-		setWikibaseNamespaces();
 
 		if ( $wmgWikibaseItemNamespace === 'main' ) {
 			$wgWBSettings['repoNamespaces'] = array(
