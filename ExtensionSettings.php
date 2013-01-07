@@ -1,7 +1,7 @@
 <?php
 
 if ( !defined( 'MEDIAWIKI' ) ) {
-		die( 'Invalid entry point.' );
+	die( 'Invalid entry point.' );
 }
 
 // extensions enabled by default on all wikis
@@ -117,9 +117,9 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 
 	setWikibaseNamespaces( $wmgWikibaseItemsInMainNS );
 
-    if ( $wmgWikibaseExperimental ) {
-        define( 'WB_EXPERIMENTAL_FEATURES', 1 );
-    }
+	if ( $wmgWikibaseExperimental ) {
+		define( 'WB_EXPERIMENTAL_FEATURES', 1 );
+	}
 
 	if ( $wmgUseWikibaseRepo ) {
 		require_once( "$IP/extensions/Wikibase/repo/Wikibase.php" );
