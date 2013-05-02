@@ -19,7 +19,7 @@ $wgVectorFeatures['simplesearch'] = array( 'global' => true, 'user' => false );
 $wgVectorFeatures['expandablesearch'] = array( 'global' => false, 'user' => false );
 $wgVectorUseSimpleSearch = true;
 
-//require_once( "$IP/extensions/WikiEditor/WikiEditor.php" );
+require_once( "$IP/extensions/WikiEditor/WikiEditor.php" );
 
 $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
