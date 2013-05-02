@@ -4,11 +4,35 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 		die( 'Illegal entry point' );
 }
 
+$wgDBtype           = "mysql";
+
+# MySQL specific settings
+$wgDBprefix         = "";
+
+# Experimental charset support for MySQL 5.0.
+$wgDBmysql5 = false;
+
 $wgDBTableOptions   = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
 
+function setDbSection( $dblist, $value ) {
+	$newDbList = array();
+
+	foreach( $dblist as $item ) {
+		$newDbList[$item] = $value;
+	}
+
+	return $newDbList;
+}
+
+$wikilist = array_map( 'trim', file( "/var/www/common/wikipedia.dblist" ) );
+
+$dbSections = array_merge(
+	array( 'enwikidata' => 's2', 'testwikidata' => 's2', 'centralauth' => 's2' ),
+	array()
+//	setDbSection( $wikilist, 'DEFAULT' )
+);
+
 $wgLBFactoryConf = array(
-	// In order to seamlessly access a remote wiki, as the pollForChanges script needs to do,
-	// LBFactory_Multi must be used.
 	'class' => 'LBFactory_Multi',
 
 	// Connect to all databases using the same credentials.
@@ -23,7 +47,7 @@ $wgLBFactoryConf = array(
 	// Configure two sections, one for the repo and one for the client.
 	// Each section contains only one server.
 	'sectionLoads' => array(
-		's1' => array(
+		'DEFAULT' => array(
 			'localhost' => 1,
 		),
 		's2' => array(
@@ -33,16 +57,7 @@ $wgLBFactoryConf = array(
 
 	// Map the wiki database names to sections. Database names must be unique,
 	// i.e. may not exist in more than one section.
-	'sectionsByDB' => array(
-		'enwiki' => 's1',
-		'arwiki' => 's1',
-		'dewiki' => 's1',
-		'huwiki' => 's1',
-		'enwikidata' => 's2',
-		'testwikidata' => 's2',
-		'centralauth' => 's2',
-		'abusefilter' => 's2',
-	),
+	'sectionsByDB' => $dbSections,
 
 	// Map host names to IP addresses to bypass DNS.
 	//
@@ -54,7 +69,6 @@ $wgLBFactoryConf = array(
 	'hostsByName' => array(
 		'localhost' => '127.0.0.1:3306',
 		'linode2' => $wmgDBserver2,
-		'linode3' => $wmgDBserver3,
 	),
 
 	// Set up as fake master, because there are no slaves.
@@ -62,8 +76,7 @@ $wgLBFactoryConf = array(
 
 	'externalLoads' => array(
 		'cluster25' => array(
-			$wmgDBserver3 => 1,
-			$wmgDBserver2 => 3,
+			'127.0.0.1:3306' => 1,
 		),
 	),
 

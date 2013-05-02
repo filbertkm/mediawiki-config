@@ -12,6 +12,8 @@ $wgEnableJavaScriptTest = true;
 
 $wgResourceLoaderDebug = true;
 
+$wgProfiler['class'] = 'Profiler';
+
 // Only record profiling info for pages that took longer than this
 $wgProfileLimit = 0.0;
 // Don't put non-profiling info into log file
@@ -33,5 +35,11 @@ $wgDebugSquid = false;
 $wgEnableProfileInfo = true;
 
 $wgDebugLogGroups = array(
-        'wikidata'     => '/var/www/' . MW_SITE_DOMAIN . '/wikimedia-dev/logs/wikidata.log',
+	'dispatcher' => '/var/log/wikibase/dispatcher.log',
+	'wikidata'     => '/var/log/mediawiki/wikidata.log',
+	'Wikibase\ChangeNotificationJob' => '/var/log/mediawiki/jobrunner.log',
+//	'Wikibase\LangLinkHandler' => '/var/log/wikibase/langlinkhandler.log'
+	'Wikibase\ChangeHandler' => '/var/log/mediawiki/changehandler.log'
 );
+
+//$wgDebugLogFile = '/var/log/mediawiki/mediawiki.log';

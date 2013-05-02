@@ -9,13 +9,18 @@ require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
 require_once( "$IP/extensions/Cite/Cite.php" );
 require_once( "$IP/extensions/CheckUser/CheckUser.php" );
 require_once( "$IP/extensions/cldr/cldr.php" );
-require_once( "$IP/extensions/CategoryTree/CategoryTree.php" );
+//require_once( "$IP/extensions/CategoryTree/CategoryTree.php" );
 require_once( "$IP/extensions/SiteMatrix/SiteMatrix.php" );
-require_once( "$IP/extensions/Vector/Vector.php" );
+//require_once( "$IP/extensions/Vector/Vector.php" );
+//require_once( "$IP/extensions/MobileFrontend/MobileFrontend.php" );
 
 $wgVectorFeatures['collapsibletabs']['user'] = true;
 
-require_once( "$IP/extensions/WikiEditor/WikiEditor.php" );
+$wgVectorFeatures['simplesearch'] = array( 'global' => true, 'user' => false );
+$wgVectorFeatures['expandablesearch'] = array( 'global' => false, 'user' => false );
+$wgVectorUseSimpleSearch = true;
+
+//require_once( "$IP/extensions/WikiEditor/WikiEditor.php" );
 
 $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
@@ -44,7 +49,7 @@ if ( $wmgUseAbuseFilter ) {
 }
 
 if ( $wmgUseCentralAuth ) {
-	require_once( "$IP/extensions/CentralAuth/CentralAuth.php" );
+//	require_once( "$IP/extensions/CentralAuth/CentralAuth.php" );
 
 	$wgCentralAuthCookies = true;
 	$wgCentralAuthAutoNew = true;
@@ -62,8 +67,70 @@ if ( $wmgUseCentralAuth ) {
 	);
 }
 
+if ( $wmgUseFlaggedRevs ) {
+	require_once( "$IP/extensions/FlaggedRevs/FlaggedRevs.php" );
+
+	$wgFlaggedRevTags = array(
+		'accuracy' => array( 'levels' => 2, 'quality' => 2, 'pristine' => 4 ),
+	);
+	$wgFlagRestrictions = array(
+		'accuracy' => array( 'review' => 1, 'autoreview' => 1 ),
+	);
+	$wgGroupPermissions['autoconfirmed']['movestable'] = true; // bug 14166
+
+	$wmfStandardAutoPromote = $wgFlaggedRevsAutopromote; // flaggedrevs defaults
+	$wgFlaggedRevsAutopromote = false;
+
+	$wgGroupPermissions['sysop']['stablesettings'] = false; // -aaron 3/20/10
+
+	$wgEnableValidationStatisticsUpdates = false;
+
+	# Rights for Bureaucrats (b/c)
+/*	if ( !in_array( 'reviewer', $wgAddGroups['bureaucrat'] ) ) {
+		$wgAddGroups['bureaucrat'][] = 'reviewer'; // promote to full reviewers
+	}
+	if ( !in_array( 'reviewer', $wgRemoveGroups['bureaucrat'] ) ) {
+		$wgRemoveGroups['bureaucrat'][] = 'reviewer'; // demote from full reviewers
+	}
+*/
+	$wgFlaggedRevsNamespaces = array( NS_MAIN );
+}
+
+if ( $wmgUseScribunto ) {
+	require_once( "$IP/extensions/Scribunto/Scribunto.php" );
+	$wgScribuntoDefaultEngine = 'luastandalone';
+}
+
+if ( $wmgUseVisualEditor ) {
+	require_once("$IP/extensions/VisualEditor/VisualEditor.php");
+
+	// Create VisualEditor namespace
+	define( 'NS_VISUALEDITOR', 2500 );
+	define( 'NS_VISUALEDITOR_TALK', 2501 );
+	$wgExtraNamespaces[NS_VISUALEDITOR] = 'VisualEditor';
+	$wgExtraNamespaces[NS_VISUALEDITOR_TALK] = 'VisualEditor_talk';
+
+	// Allow using VisualEditor in the main namespace only (default)
+	$wgVisualEditorNamespaces = array( NS_MAIN );
+
+	// Enable by default for everybody
+	$wgDefaultUserOptions['visualeditor-enable'] = 1;
+
+	// Don't allow users to disable it
+	$wgHiddenPrefs[] = 'visualeditor-enable';
+
+	$wgVisualEditorParsoidURL = 'http://127.0.0.1:8000/';
+	$wgVisualEditorParsoidPrefix = 'en-wiki';
+}
+
 if ( $wmgUseUniversalLanguageSelector ) {
 	require_once( "$IP/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php" );
+	$wgULSGeoService = true;
+	$wgULSEnableAnon = true;
+}
+
+if ( $wmgUseUploadWizard ) {
+	require_once( "$IP/extensions/UploadWizard/UploadWizard.php" );
 }
 
 if ( $wmgUseWikibaseRepo && $wmgUseWikibaseClient ) {
@@ -77,17 +144,18 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 	require_once( "$IP/extensions/Wikibase/lib/WikibaseLib.php" );
 
 	function setWikibaseNamespaces( $main = false ) {
-		global $wgWBSettings, $wgWBNamespaces, $wgNamespaceAliases;
+		global $wmgWikibaseItemsInMainNS, $wgWBRepoSettings, $wgWBSettings,
+			$wgWBNamespaces, $wgNamespaceAliases;
 
 		// Define custom namespaces. Use these exact constant names.
 		$baseNs = 100;
 
-		if ( $main ) {
+		if ( $wmgWikibaseItemsInMainNS ) {
 			$wgNamespaceAliases['Item'] = NS_MAIN;
 			$wgNamespaceAliases['Item_talk'] = NS_TALK;
 
 			// Tell Wikibase which namespace to use for which kind of entity
-			$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = NS_MAIN;
+			$wgWBRepoSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = NS_MAIN;
 		} else {
 			// default to items in Item namespace
 			define( 'WB_NS_ITEM', $baseNs );
@@ -97,7 +165,7 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 			$wgWBNamespaces[WB_NS_ITEM] = 'Item';
 			$wgWBNamespaces[WB_NS_ITEM_TALK] = 'Item_talk';
 
-			$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = WB_NS_ITEM;
+			$wgWBRepoSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = WB_NS_ITEM;
 		}
 
 		define( 'WB_NS_PROPERTY', $baseNs + 2 );
@@ -105,17 +173,25 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 		define( 'WB_NS_QUERY', $baseNs + 4 );
 		define( 'WB_NS_QUERY_TALK', $baseNs + 5 );
 
-		$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_PROPERTY] = WB_NS_PROPERTY;
-		$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_QUERY] = WB_NS_QUERY;
+		$wgWBRepoSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_PROPERTY] = WB_NS_PROPERTY;
+	//	$wgWBSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_QUERY] = WB_NS_QUERY;
 
 		// Register extra namespaces.
 		$wgWBNamespaces[WB_NS_PROPERTY] = 'Property';
 		$wgWBNamespaces[WB_NS_PROPERTY_TALK] = 'Property_talk';
-		$wgWBNamespaces[WB_NS_QUERY] = 'Query';
-		$wgWBNamespaces[WB_NS_QUERY_TALK] = 'Query_talk';
+	//	$wgWBNamespaces[WB_NS_QUERY] = 'Query';
+	//	$wgWBNamespaces[WB_NS_QUERY_TALK] = 'Query_talk';
 	}
 
-	setWikibaseNamespaces( $wmgWikibaseItemsInMainNS );
+	$wgWBClientDbList = array_merge(
+		array_map( 'trim', file( getRealmSpecificFilename( "$IP/../wikipedia.dblist" ) ) )
+	);
+
+//	$wgWBClientDbList = array( 'enwiki', 'hewiki', 'dewiki', 'eswiki', 'frwiki', 'itwiki' );
+
+	$wgWBSettings['localClientDatabases'] = array_combine( $wgWBClientDbList, $wgWBClientDbList );
+
+//	setWikibaseNamespaces( $wmgWikibaseItemsInMainNS );
 
 	if ( $wmgWikibaseExperimental ) {
 		define( 'WB_EXPERIMENTAL_FEATURES', 1 );
@@ -124,24 +200,38 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 	if ( $wmgUseWikibaseRepo ) {
 		require_once( "$IP/extensions/Wikibase/repo/Wikibase.php" );
 
+		setWikibaseNamespaces( $wmgWikibaseItemsInMainNS );
+
 		$wgExtraNamespaces = $wgWBNamespaces + $wgExtraNamespaces;
 
 		$wgContentHandlerUseDB = true;
 
-		$wgWBSettings['withoutTermSearchKey'] = true;
+	//	$wgWBRepoSettings['withoutTermSearchKey'] = true;
 
-		$wgWBSettings['apiInDebug'] = false;
-		$wgWBSettings['apiInTest'] = false;
-		$wgWBSettings['apiWithRights'] = true;
-		$wgWBSettings['apiWithTokens'] = false;
+		$wgWBSettings['disabledSpecialPages'] = array(
+			'Mostinterwikis',
+			'Withoutinterwiki'
+		);
 
-		$wgGroupPermissions['wbeditor']['item-set'] = false;
+		$wgWBSettings['dataTypes'] = array(
+			'wikibase-item',
+			'commonsMedia',
+			'string'
+		);
+
+		$wgWBRepoSettings['apiInDebug'] = false;
+		$wgWBRepoSettings['apiInTest'] = false;
+		$wgWBRepoSettings['apiWithRights'] = true;
+		$wgWBRepoSettings['apiWithTokens'] = false;
+
+		$wgGroupPermissions['wbeditor']['item-set'] = true;
 	}
 
 	if ( $wmgUseWikibaseClient ) {
+		require_once( "$IP/extensions/ExternalChanges/ExternalChanges.php" );
 		require_once( "$IP/extensions/Wikibase/client/WikibaseClient.php" );
 
-		$wgWBSettings['repoUrl'] = "//en-wikidata.$wmgSiteDomain";
+		$wgWBSettings['repoUrl'] = "http://en-wikidata.$wmgSiteDomain";
 
 		// The global site ID by which this wiki is known on the repo.
 		$wgWBSettings['siteGlobalID'] = $wgDBname;
@@ -152,7 +242,10 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 		$wgWBSettings['changesDatabase'] = "enwikidata";
 		$wgWBSettings['repoDatabase'] = "enwikidata";
 
-		if ( $wmgWikibaseItemNamespace === 'main' ) {
+		$wgWBClientSettings['enableSiteLinkWidget'] = true;
+		$wgWBClientSettings['allowDataTransclusion'] = true;
+
+		if ( $wmgWikibaseItemsInMainNS ) {
 			$wgWBSettings['repoNamespaces'] = array(
 			//  'wikibase-item' => '',
 				'wikibase-property' => 'Property'
@@ -162,6 +255,23 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 				'wikibase-item' => 'Item',
 				'wikibase-property' => 'Property'
 			);
+		}
+
+		$wgHooks['SetupAfterCache'][] = 'wmfWBClientExcludeNS';
+
+		function wmfWBClientExcludeNS() {
+			global $wgWBClientSettings;
+
+			$wgWBClientSettings['excludeNamespaces'] = array_merge(
+				MWNamespace::getTalkNamespaces(),
+				array( NS_USER )
+			);
+
+			return true;
+		};
+
+		foreach( $wmgWikibaseClientSettings as $setting => $value ) {
+			$wgWBSettings[$setting] = $value;
 		}
 	}
 }
