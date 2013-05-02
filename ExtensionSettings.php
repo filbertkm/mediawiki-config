@@ -9,10 +9,9 @@ require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
 require_once( "$IP/extensions/Cite/Cite.php" );
 require_once( "$IP/extensions/CheckUser/CheckUser.php" );
 require_once( "$IP/extensions/cldr/cldr.php" );
-//require_once( "$IP/extensions/CategoryTree/CategoryTree.php" );
+require_once( "$IP/extensions/CategoryTree/CategoryTree.php" );
 require_once( "$IP/extensions/SiteMatrix/SiteMatrix.php" );
-//require_once( "$IP/extensions/Vector/Vector.php" );
-//require_once( "$IP/extensions/MobileFrontend/MobileFrontend.php" );
+require_once( "$IP/extensions/Vector/Vector.php" );
 
 $wgVectorFeatures['collapsibletabs']['user'] = true;
 
@@ -94,6 +93,10 @@ if ( $wmgUseFlaggedRevs ) {
 	}
 */
 	$wgFlaggedRevsNamespaces = array( NS_MAIN );
+}
+
+if ( $wmgUseMobileFrontend ) {
+	require_once( "$IP/extensions/MobileFrontend/MobileFrontend.php" );
 }
 
 if ( $wmgUseScribunto ) {

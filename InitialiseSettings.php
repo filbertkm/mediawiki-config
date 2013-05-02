@@ -144,6 +144,11 @@ $wgConf->settings = array(
 		'default' => false,
 		'enwiki' => true,
 	),
+	'wmgUseMobileFrontend' => array(
+		'default' => false,
+		'enwikidata' => true,
+		'enwiki' => true
+	),
 	'wmgUseScribunto' => array(
 		'default' => false,
 		'enwiki' => true
