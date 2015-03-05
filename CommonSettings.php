@@ -1,124 +1,227 @@
 <?php
-error_reporting( E_DEPRECATED | E_USER_DEPRECATED | E_ALL | E_STRICT );
+error_reporting( -1 );
+ini_set( 'display_errors', 1 );
+ini_set( 'display_startup_errors', 1 );
+//error_reporting( E_ALL | E_STRICT );
 
 if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-require_once( "$IP/../config/PrivateSettings.php" );
-require_once( "$IP/../config/InitialiseSettings.php" );
-require_once( "$IP/../config/DBSettings.php" );
+require_once __DIR__ . '/SiteSettings.php';
 
-if ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ) {
-	$wgServer = preg_replace( '/^http:/', 'https:', $wgServer );
-}
+$wgEdititis = true;
 
-$wgScriptPath       = "";
-$wgArticlePath      = "/wiki/$1";
-$wgScriptExtension  = ".php";
+$wgScriptPath = "";
+$wgArticlePath = "/wiki/$1";
+$wgUsePathInfo = true;
 
-$wgStylePath        = "$wgScriptPath/skins";
+require_once "$IP/skins/Vector/Vector.php";
+require_once "$IP/skins/MonoBook/MonoBook.php";
+require_once "$IP/skins/Modern/Modern.php";
+require_once "$IP/skins/CologneBlue/CologneBlue.php";
+require_once "$IP/skins/Metrolook/Metrolook.php";
 
-$wgCrossSiteAJAXdomains = array(
-	'*'
-);
+$wgStylePath = "$wgScriptPath/skins";
+$wgValidSkins = array( 'cologneblue', 'modern', 'monobook', 'vector', 'tempo', 'tomas',
+	'Metrolook', 'truglass', 'daddio' );
 
 if ( !isset( $wgLogo ) ) {
-	$wgLogo             = "$wgStylePath/common/images/wiki.png";
+	$wgLogo = "$wgStylePath/common/images/wiki.png";
 }
 
-$wgEnableEmail      = true;
+$wgMetaNamespace =  $wgDBname === 'testrepo' ? 'Wikidata' : 'Project';
+$wgMetaNamespaceTalk = $wgDBname === 'testrepo' ? 'Wikidata_talk' : 'Project_talk';
+
+$wgEnableEmail	  = true;
 $wgEnableUserEmail  = true; # UPO
 
 $wgEmergencyContact = "apache@localhost";
 $wgPasswordSender   = "apache@localhost";
+//$wgPasswordDefault = 'B';
 
-$wgEnotifUserTalk      = false; # UPO
-$wgEnotifWatchlist     = false; # UPO
+$wgEnotifUserTalk	  = false; # UPO
+$wgEnotifWatchlist	 = true;
 $wgEmailAuthentication = true;
 
-$wgUseGzip = true;
+$wgJobRunRate = 0;
 
-## Shared memory settings
-$wgMainCacheType    = CACHE_MEMCACHED;
+$wgMainCacheType	= CACHE_MEMCACHED;
+//$wgMainCacheType = 'memcached-pecl';
 $wgMemCachedServers = array( '127.0.0.1:11211' );
+$wgCacheEpoch = '20140925125000';
+$wgResourceLoaderStorageEnabled = true;
+$wgRevisionCacheExpiry = 86400 * 7;
+$wgEnableSidebarCache = false;
 
-$wgRC2UDPAddress = '127.0.0.1';
-$wgRC2UDPPort = 9390;
+$wgSitesCacheFile = "$IP/sites.json";
 
-## Localisation cache
 //$wgLocalisationCacheConf['manualRecache'] = true;
+//$wgUseLocalMessageCache = true;
+$wgCacheDirectory = __DIR__ . '/../cache';
 
-$wgUseLocalMessageCache = true;
+$wgEnableUploads = true;
+#$wgUseImageMagick = true;
+#$wgImageMagickConvertCommand = "/usr/bin/convert";
+$wgUseInstantCommons = true;
 
-$wgEnableSidebarCache = true;
+$wgShellLocale = "en_US.UTF-8";
 
-## To enable image uploads, make sure the 'images' directory
-## is writable, then set this to true:
-$wgEnableUploads  = true;
-$wgUseImageMagick = true;
-$wgImageMagickConvertCommand = "/usr/bin/convert";
-
-# InstantCommons allows wiki to use images from http://commons.wikimedia.org
-$wgUseInstantCommons  = true;
-
-## If you use ImageMagick (or any other shell command) on a
-## Linux server, this will need to be set to the name of an
-## available UTF-8 locale
-$wgShellLocale = "en_US.utf8";
-
-## If you want to use image uploads under safe mode,
-## create the directories images/archive, images/thumb and
-## images/temp, and make them all writable. Then uncomment
-## this, if it's not already uncommented:
 #$wgHashedUploadDirectory = false;
+#$wgCacheDirectory = "$IP/cache";
 
-$wgSecretKey = "362f52aa65f94f306ec758c6b8e5f6c30293774dc8c23e7d3fac6c362e762d00";
+if ( !isset( $wgLanguageCode ) ) {
+	$wgLanguageCode = "en";
+}
 
-# Site upgrade key. Must be set to a string (default provided) to turn on the
-# web installer while LocalSettings.php is in place
-$wgUpgradeKey = "b736600c24d29e02";
+$wgSecretKey = "b3d2411fac4b4d56d68b7a097f81ede946516bf39857ae055e3ca86c3e45d9d7";
+$wgUpgradeKey = "9e4905c852ba2f01";
 
-## Default skin: you can change the default skin. Use the internal symbolic
-## names, ie 'standard', 'nostalgia', 'cologneblue', 'monobook', 'vector':
 $wgDefaultSkin = "vector";
-$wgVectorUseIconWatch = true;
 
-## For attaching licensing metadata to pages, and displaying an
-## appropriate copyright notice / icon. GNU Free Documentation
-## License and Creative Commons licenses are supported so far.
 $wgRightsPage = ""; # Set to the title of a wiki page that describes your license/copyright
-$wgRightsUrl  = "";
-$wgRightsText = "";
-$wgRightsIcon = "";
+$wgRightsUrl  = "//creativecommons.org/licenses/by-sa/3.0/";
+$wgRightsText = "Creative Commons Attribution-Share Alike 3.0";
+$wgRightsIcon = "//creativecommons.org/images/public/somerights20.png";
 
-# Path to the GNU diff3 utility. Used for conflict resolution.
 $wgDiff3 = "/usr/bin/diff3";
 
-# Query string length limit for ResourceLoader. You should only set this if
-# your web server has a query string length limit (then set it to that limit),
-# or if you have suhosin.get.max_value_length set in php.ini (then set it to
-# that value)
-$wgResourceLoaderMaxQueryLength = 2048;
-
-$wgMetaNamespace = 'Project';
-$wgMetaNamespaceTalk = 'Project talk';
+$wgResourceLoaderMaxQueryLength = -1;
+$wgIncludejQueryMigrate = true;
 
 $wgAllowUserJs = true;
 $wgAllowUserCss = true;
 
-$wgBotEditsInPatrolLog  = false;
+$wgCrossSiteAJAXdomains = array(
+	'wikidata-repo',
+	'wikidata-client'
+);
 
-$wgGroupPermissions['sysop']['deletelogentry']  = true;
-$wgGroupPermissions['sysop']['deleterevision']  = true;
+$wgDefaultUserOptions['watchdefault'] = 0;
+$wgDefaultUserOptions['enotifwatchlistpages'] = 0;
+$wgDefaultUserOptions['usenewrc'] = 0;
+
+#$wgAmericanDates = true;
+
+$wgDebugToolbar = false;
+$wgShowExceptionDetails = true;
+$wgShowSQLErrors		= true;
+$wgEnableJavaScriptTest = true;
+$wgDevelopmentWarnings = true;
+$wgShowDBErrorBacktrace = true;
+#$wgResourceLoaderDebug = true;
+$wgDeprecationReleaseLimit = '1.20';
+
+require_once __DIR__ . '/Profile.php';
+
+$wgHooks['LoginAuthenticateAudit'][] = function( $user, $pass, $retval ) {
+	if ( $user->isAllowed( 'delete' ) ) {
+
+	}
+
+	return true;
+};
+
+$wgAutoConfirmAge = 4 * 3600 * 24;
+$wgAutoConfirmCount = 10;
+
+$wgAutopromote = array(
+	'autoconfirmed' => array( '&',
+		array( APCOND_EDITCOUNT, $wgAutoConfirmCount ),
+		array( APCOND_AGE, $wgAutoConfirmAge ),
+	),
+);
+
+$wgAutopromoteOnce = array(
+	'onEdit' => array(),
+	'onView' => array()
+);
+
+global $wgGroupPermissions;
+$wgGroupPermissions['confirmed'] = $wgGroupPermissions['autoconfirmed'];
+
+$wgGroupPermissions['sysop']['deletelogentry'] = true;
+$wgGroupPermissions['sysop']['deleterevision'] = true;
 $wgGroupPermissions['sysop']['hideuser'] = true;
 $wgGroupPermissions['sysop']['suppressrevision'] = true;
-$wgGroupPermissions['sysop']['editinterface'] = true;
 $wgGroupPermissions['sysop']['suppressionlog'] = true;
 
-if ( $wmgDebugMode ) {
-	require_once( "$IP/../config/DebugSettings.php" );
+$wgExtraLanguageNames = array(
+	'ota' => 'لسان توركى'
+);
+
+$wgHooks['SkinTemplateOutputPageBeforeExec'][] = function( $sk, $tpl ) {
+	$reportVars = array(
+		'wgMemoryUsage' => memory_get_usage()
+	);
+
+	$reportTime = $tpl->get( 'reporttime' );
+	$tpl->set( 'reporttime', $reportTime . Skin::makeVariablesScript( $reportVars ) );
+};
+
+require_once __DIR__ . '/ExtensionMessages.php';
+
+function logBacktrace() {
+	wfDebugLog( 'wikidata', __CLASS__ . ':' . __METHOD__ );
+	ob_start();
+	var_dump( debug_backtrace() );
+	$backtrace = ob_get_clean();
+	wfDebugLog( 'wikidata', $backtrace );
 }
 
-require_once( "$IP/../config/jobqueue.php" );
-require_once( "$IP/../config/ExtensionSettings.php" );
+function exportData( $object ) {
+	ob_start();
+	var_dump( $object );
+	$data = ob_get_clean();
+	var_export( $data );
+}
+
+function logData( $object ) {
+	wfDebugLog( 'wikidata', var_export( $object, true ) );
+}
+
+function logString( $string ) {
+	wfDebugLog( 'wikidata', $string );
+}
+
+$wgPreviousUsage = null;
+
+function wfMemoryUsage( $class = null, $object = null ) {
+	global $wgPreviousUsage;
+	return;
+	$usage = memory_get_usage( true );
+	echo $usage;
+
+	if ( $wgPreviousUsage === null ) {
+		$wgPreviousUsage = $usage;
+	}
+
+	if ( $usage > $wgPreviousUsage && $object !== null ) {
+		echo "\n*****\n";
+		var_export( $object );
+		echo "\n";
+	}
+
+	$wgPreviousUsage = $usage;
+
+	$callers = debug_backtrace();
+	echo ': ';
+
+	if ( $class && is_string( $class ) ) {
+		echo $class . ':';
+	}
+
+	echo $callers[1]['function'];
+
+	if ( $object ) {
+		echo ' - ' . is_object( $object ) ? get_class( $object ) : gettype( $object );
+	}
+
+	echo "\n";
+}
+
+$wgDebugLogGroups = array(
+	'memcached' => '/Library/WebServer/Documents/logs/memcached.log',
+	'wikidata' => '/Library/WebServer/Documents/logs/wikidata.log',
+	'exception' => '/Library/WebServer/Documents/logs/exception.log'
+);
