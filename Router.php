@@ -1,36 +1,30 @@
 <?php
 
-if ( !defined( 'MEDIAWIKI' ) ) {
-	exit;
-}
-
-$wmgUseWikibaseRepo = false;
-$wmgUseWikibaseClient = false;
-$wmgUseWikibaseQuery = false;
-$wmgUseWikibaseExperimental = false;
-$wmgUseWikibaseBuild = true;
-$wmgSingleInstance = false;
-$wgDBname = 'testrepo';
+ini_set( "display_errors", 1 );
+error_reporting( -1 );
 
 if ( isset( $_SERVER ) && array_key_exists( 'SERVER_NAME', $_SERVER ) ) {
 	switch ( $_SERVER['SERVER_NAME'] ) {
-		case 'wikidata-repo':
-			$wgDBname = 'testrepo';
-			break;
-		case 'wikidata-client':
-			$wgDBname = 'testclient';
+		case 'wikidatawiki':
+			$wgDBname = 'wikidatawiki';
 			break;
 		case 'enwiki':
 			$wgDBname = 'enwiki';
 			break;
-		case 'wikidata-all':
-			$wgDBname = 'wikidatawiki';
+		case 'arwiki':
+			$wgDBname = 'arwiki';
 			break;
-		case 'wikidata-example':
-			$wgDBname = 'wikidata_example';
+		case 'dewiki':
+			$wgDBname = 'dewiki';
+			break;
+		case 'eswiki':
+			$wgDBname = 'eswiki';
+			break;
+		case 'frwiki':
+			$wgDBname = 'frwiki';
 			break;
 		default:
-			die( 'cannot find wiki' );
+			$wgDBname = 'wikidatawiki';
 			break;
 	}
 }
@@ -40,51 +34,23 @@ if ( PHP_SAPI === 'cli' ) {
 		$wgDBname = $argv[1];
 		array_shift( $argv );
 		array_shift( $argv );
+	} else {
+		$wgDBname = 'wikidatawiki';
 	}
 }
 
-if ( $wgDBname === 'wikidata_sqlite' ) {
-	$wgDBtype = "sqlite";
-	$wgSQLiteDataDir = '/Library/WebServer/Documents/config';
-} else {
-	require_once ( "$IP/../config/DBSettings.php" );
-}
+require_once __DIR__ . '/DebugSettings.php';
+require_once __DIR__ . '/SiteSettings.php';
+require_once __DIR__ . '/CommonSettings.php';
+require_once __DIR__ . '/Logging.php';
 
-if ( $wgDBname === 'testrepo' ) {
-	$wmgUseWikibaseRepo = true;
-	$wmgUseWikibaseClient = true;
-	$wmgUseWikibaseExperimental = true;
-	$wgSitename = "TestRepo";
-	$wgServer = "http://wikidata-repo";
-} elseif ( $wgDBname === 'testclient' || $wgDBname === 'enwikisource' ) {
-	$wmgUseWikibaseClient = true;
-	$wgSitename = "TestClient";
-	$wgServer = "http://wikidata-client";
-} elseif ( $wgDBname === 'enwiki' ) {
-	$wmgUseWikibaseClient = true;
-	$wgSitename = "Wikipedia";
-	$wgServer = 'http://enwiki';
-} elseif ( $wgDBname === 'wikidatawiki' ) {
-	$wmgUseWikibaseRepo = true;
-	$wmgUseWikibaseClient = true;
-	$wmgUseWikibasePropertySuggester = true;
-	$wgSiteName = "TestAll";
-	$wgServer = "http://wikidata-all";
-} elseif ( $wgDBname === 'wikidata_sqlite' ) {
-	$wmgUseWikibaseRepo = true;
-	$wmgUseWikibaseClient = true;
-	$wmgUseWikibaseExperimental = true;
-	$wgSitename = "ExampleRepo";
-	$wgServer = "http://wikidata-example";
-}
+/*
+$wgDBtype = "sqlite";
+$wgSQLiteDataDir = '/var/www/wiki/db';
+$wgDBserver = "";
+$wgDBuser = "";
+$wgDBpassword = "";
+*/
 
-$wgLogo = "http://upload.wikimedia.org/wikipedia/commons/thumb/4/43/"
-	. "Wikidata-logo-en-black.svg/135px-Wikidata-logo-en-black.svg.png";
-
-$wgLanguageCode = "en";
-
-require_once "$IP/../config/CommonSettings.php";
-require_once "$IP/../config/ExtensionSettings.php";
-require_once "$IP/../config/WikibaseSettings.php";
-//require_once "$IP/../config/Wikibase.php";
-require_once "$IP/../config/PrivateSettings.php";
+require_once __DIR__ . '/ExtensionSettings.php';
+require_once __DIR__ . '/Skins.php';

@@ -1,44 +1,73 @@
 <?php
 
-$wgConf = new SiteConfiguration;
+$wgConf = new SiteConfiguration();
 
 $wgConf->suffixes = array(
+	// 'wikipedia',
 	'wikipedia' => 'wiki',
-	'wikidata',
+	'wiktionary',
+	'wikiquote',
+	'wikibooks',
+	'wikiquote',
+	'wikinews',
 	'wikisource',
-	'wikivoyage'
+	'wikiversity',
+	'wikimedia',
+	'wikivoyage',
+	'wikidata'
 );
 
-$wgConf->wikis = array( 'wikidatawiki', 'testrepo', 'testclient', 'enwikisource' );
+$wgConf->wikis = array_map( 'trim', file( '/home/katie/src/mediawiki-config/dblists/all.dblist' ) );
 
 $wgConf->settings = array(
+	'wmgUseWikibaseQualityExternalValidation' => array(
+		'default' => true,
+	),
+	'wmgUseWikibaseQuality' => array(
+		'default' => true,
+	),
+	'wgLanguageCode' => array(
+		'default' => 'en',
+		'arwiki' => 'ar',
+		'dewiki' => 'de',
+		'eswiki' => 'es',
+		'frwiki' => 'fr'
+	),
+	'wgCanonicalServer' => array(
+		'wikidatawiki' => 'http://wikidatawiki',
+		'enwiki' => 'http://enwiki',
+		'specieswiki' => 'https://species.wikimedia.org',
+	),
+	'wgServer' => array(
+		'default' => 'http://wikidatawiki',
+		'arwiki' => 'http://arwiki',
+		'dewiki' => 'http://dewiki',
+		'enwiki' => 'http://enwiki',
+		'eswiki' => 'http://eswiki',
+		'frwiki' => 'http://frwiki',
+		'wikidatawiki' => 'http://wikidatawiki',
+	),
+	'wgArticlePath' => array(
+		'default' => '/wiki/$1',
+	),
 	'wgSitename' => array(
-		'wikidatawiki' => 'Test Wikidata',
-		'testrepo' => 'Test Wikidata',
-		'testclient' => 'Test Wikipedia',
-		'enwikisource' => 'Wikisource'
+		'wikipedia' => 'Wikipedia',
+		'wikisource' => 'Wikisource',
+		'wikidatawiki' => 'Wikidata'
 	),
-	'wmgUseWikibasePropertySuggester' => array(
+	'wmgUseWikibaseRepo' => array(
 		'default' => false,
-		'testrepo' => true,
+		'wikidatawiki' => true,
 	),
+	'wmgUseWikibaseClient' => array(
+		'default' => true
+	)
 );
 
-$wgConf->siteParamsCallback = function( $conf, $wiki ) {
-	return array(
-		'suffix' => $wiki,
-		'lang' => 'en',
-		'params' => array(
-			'lang' => 'en',
-			'site' => $wiki,
-			'wiki' => $wiki,
-		),
-		'tags' => array()
-	);
-};
+$wgLocalDatabases =& $wgConf->getLocalDatabases();
 
 $globals = $wgConf->getAll(
-		$wgDBname
+	$wgDBname
 );
 
 extract( $globals );
