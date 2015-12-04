@@ -21,7 +21,7 @@ if ( $wmgUseWikibaseRepo ) {
 	$wgWBRepoSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = NS_MAIN;
 	$wgWBRepoSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_PROPERTY] = WB_NS_PROPERTY;
 
-	require_once "$IP/extensions/WikibaseElastic/WikibaseElastic.php";
+#	require_once "$IP/extensions/WikibaseElastic/WikibaseElastic.php";
 
 	$wgWBRepoSettings['clientDbList'] = array( 'enwiki', 'arwiki', 'dewiki', 'eswiki', 'frwiki' );
 	$wgWBRepoSettings['subscriptionLookupMode'] = 'subscriptions+sitelinks';

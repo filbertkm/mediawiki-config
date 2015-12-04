@@ -34,12 +34,12 @@ $wgConf->settings = array(
 		'frwiki' => 'fr'
 	),
 	'wgCanonicalServer' => array(
+		'defulat' => 'http://localhost',
 		'wikidatawiki' => 'http://wikidatawiki',
 		'enwiki' => 'http://enwiki',
-		'specieswiki' => 'https://species.wikimedia.org',
 	),
 	'wgServer' => array(
-		'default' => 'http://wikidatawiki',
+		'default' => 'http://localhost',
 		'arwiki' => 'http://arwiki',
 		'dewiki' => 'http://dewiki',
 		'enwiki' => 'http://enwiki',

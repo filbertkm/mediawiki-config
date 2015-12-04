@@ -68,7 +68,7 @@ $wgShellLocale = "en_US.utf8";
 ## Set $wgCacheDirectory to a writable directory on the web server
 ## to make your wiki go slightly faster. The directory should not
 ## be publically accessible from the web.
-#$wgCacheDirectory = "$IP/cache";
+$wgCacheDirectory = "$IP/../cache";
 
 ## For attaching licensing metadata to pages, and displaying an
 ## appropriate copyright notice / icon. GNU Free Documentation
@@ -96,3 +96,8 @@ foreach( array( 'bureaucrat', 'sysop', 'bot' ) as $group ) {
 
 $wgJobRunRate = 0;
 $wgRCShowWatchingUsers = true;
+
+$wgExtraLanguageNames = array(
+	'din' => 'dinka',
+	'ota' => 'ottoman turkish'
+);

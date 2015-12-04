@@ -2,6 +2,7 @@
 
 require_once "$IP/extensions/ParserFunctions/ParserFunctions.php";
 require_once "$IP/extensions/Cite/Cite.php";
+require_once "$IP/extensions/cldr/cldr.php";
 require_once "$IP/extensions/WikiEditor/WikiEditor.php";
 
 $wgDefaultUserOptions['usebetatoolbar'] = 1;
@@ -24,7 +25,7 @@ $wgGroupPermissions['sysop']['abusefilter-private'] = true;
 $wgGroupPermissions['sysop']['abusefilter-modify-restricted'] = true;
 $wgGroupPermissions['sysop']['abusefilter-revert'] = true;
 
-//require_once "$IP/extensions/BetaFeatures/BetaFeatures.php";
+require_once "$IP/extensions/BetaFeatures/BetaFeatures.php";
 
 require_once "$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php";
 require_once "$IP/extensions/CodeEditor/CodeEditor.php";
@@ -45,6 +46,7 @@ require_once "$IP/extensions/Elastica/Elastica.php";
 require_once "$IP/extensions/CirrusSearch/CirrusSearch.php";
 
 $wgSearchType = 'CirrusSearch';
+
 $wgCirrusSearchShowNowUsing = true;
 $wgCirrusSearchMoreAccurateScoringMode = false;
 $wgCirrusSearchRefreshInterval = 30;
@@ -57,13 +59,23 @@ $wgCirrusSearchConnectionAttempts = 3;
 $wgCirrusSearchWikimediaExtraPlugin[ 'id_hash_mod_filter' ] = true;
 
 $wgCirrusSearchServers = array(
-    'localhost',
+	'localhost',
 );
 
 $wgCirrusSearchCustomFields = array(
 	'content' => array(
 		'kittens' => 'double'
 	)
+);
+
+$wgCirrusSearchWikimediaExtraPlugin = array(
+	'regex' => array(
+		'build',
+		'use',
+	),
+	'super_detect_noop' => true,
+	'field_value_factor_with_default' => true,
+	'id_hash_mod_filter' => true,
 );
 
 require_once "$IP/extensions/PageImages/PageImages.php";
@@ -83,6 +95,11 @@ $wgMFNearbyRange = 25000;
 $wgMFUseWikibaseDescription = true;
 $wgMFDisplayWikibaseDescription = true;
 
+
+require_once "$IP/extensions/Gather/Gather.php";
+require_once "$IP/extensions/ZeroBanner/ZeroBanner.php";
+require_once "$IP/extensions/ZeroPortal/ZeroPortal.php";
+
 if ( isset( $wgMFQueryPropModules ) && !in_array( 'pageterms', $wgMFQueryPropModules ) ) {
 	$wgMFQueryPropModules[] = 'pageterms';
 }
@@ -91,18 +108,28 @@ if ( isset( $wgMFSearchAPIParams ) ) {
 	$wgMFSearchAPIParams['wbptterms'] = array( 'label' );
 }
 
-require_once "$IP/extensions/Gather/Gather.php";
-require_once "$IP/extensions/ZeroBanner/ZeroBanner.php";
-require_once "$IP/extensions/ZeroPortal/ZeroPortal.php";
+require_once "$IP/extensions/Babel/Babel.php";
+
+$wgBabelMainCategory = 'User %code%';
+$wgBabelDefaultLevel = 'N';
+$wgBabelUseUserLanguage = true;
+
+$wgBabelCategoryNames = array(
+	'0' => 'User %code%-0',
+	'1' => 'User %code%-1',
+	'2' => 'User %code%-2',
+	'3' => 'User %code%-3',
+	'4' => 'User %code%-4',
+	'5' => 'User %code%-5',
+	'N' => 'User %code%-N',
+);
 
 require_once __DIR__ . "/Wikibase.php";
-require_once "$IP/extensions/WikibaseSearch/WikibaseSearch.php";
 
 wfLoadExtension( 'TemplateData' );
 wfLoadExtension( 'Conference' );
 wfLoadExtension( 'Disambiguator' );
 
-require_once "$IP/extensions/Babel/Babel.php";
 require_once "$IP/extensions/Flow/Flow.php";
 
 require_once "$IP/extensions/WikibaseImport/WikibaseImport.php";
@@ -110,7 +137,6 @@ require_once "$IP/extensions/WikidataQuery/WikidataQuery.php";
 
 require_once "$IP/extensions/TemplateData/TemplateData.php";
 require_once "$IP/extensions/AbuseFilter/AbuseFilter.php";
-#require_once "$IP/extensions/Sites/Sites.php";
 
 wfLoadExtension( 'SiteMatrix' );
 
