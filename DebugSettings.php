@@ -3,7 +3,6 @@
 $wgShowExceptionDetails = true;
 $wgShowDBErrorBacktrace = true;
 $wgEnableJavaScriptTest = true;
-$wgDebugToolbar = true;
 
 $wgDebugLogGroups = array(
 	'wikidata' => '/var/www/wiki/log/wikidata.log',

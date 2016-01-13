@@ -12,6 +12,11 @@ $wgDefaultUserOptions['wikieditor-preview'] = 1;
 require_once "$IP/extensions/JsonConfig/JsonConfig.php";
 require_once "$IP/extensions/Graph/Graph.php";
 
+$wgGraphDataDomains = array(
+	'mediawiki.org',
+	'www.mediawiki.org'
+);
+
 #require_once "$IP/extensions/SpamBlacklist/SpamBlacklist.php";
 
 require_once "$IP/extensions/AntiSpoof/AntiSpoof.php";
@@ -40,8 +45,6 @@ require_once "$IP/extensions/UniversalLanguageSelector/UniversalLanguageSelector
 
 require_once "$IP/extensions/Gadgets/Gadgets.php";
 
-wfLoadExtension( 'MediaWikiSearch' );
-
 require_once "$IP/extensions/Elastica/Elastica.php";
 require_once "$IP/extensions/CirrusSearch/CirrusSearch.php";
 
@@ -50,8 +53,8 @@ $wgSearchType = 'CirrusSearch';
 $wgCirrusSearchShowNowUsing = true;
 $wgCirrusSearchMoreAccurateScoringMode = false;
 $wgCirrusSearchRefreshInterval = 30;
-$wgCirrusSearchSearchShardTimeout[ 'regex' ] = '40s';
-$wgCirrusSearchClientSideSearchTimeout[ 'regex' ] = 80;
+$wgCirrusSearchSearchShardTimeout[ 'regex' ] = '20s';
+$wgCirrusSearchClientSideSearchTimeout[ 'regex' ] = 30;
 $wgJobBackoffThrottling['cirrusSearchLinksUpdate'] = 5000;
 $wgJobBackoffThrottling['cirrusSearchIncomingLinkCount'] = 1;
 $wgCirrusSearchBannedPlugins[] = 'elasticsearch-analysis-hebrew';
@@ -94,9 +97,9 @@ $wgMFNearby = true;
 $wgMFNearbyRange = 25000;
 $wgMFUseWikibaseDescription = true;
 $wgMFDisplayWikibaseDescription = true;
+$wgMobileFrontendLogo = '/../images/mobile/wikidata.png';
 
-
-require_once "$IP/extensions/Gather/Gather.php";
+#require_once "$IP/extensions/Gather/Gather.php";
 require_once "$IP/extensions/ZeroBanner/ZeroBanner.php";
 require_once "$IP/extensions/ZeroPortal/ZeroPortal.php";
 
@@ -137,6 +140,17 @@ require_once "$IP/extensions/WikidataQuery/WikidataQuery.php";
 
 require_once "$IP/extensions/TemplateData/TemplateData.php";
 require_once "$IP/extensions/AbuseFilter/AbuseFilter.php";
+
+require_once "$IP/extensions/Math/Math.php";
+
+// Set MathML as default rendering option;
+$wgDefaultUserOptions['math'] = 'mathml';
+$wgMathFullRestbaseURL= 'https://api.formulasearchengine.com/';
+
+# require_once "$IP/extensions/WikiStream/WikiStream.php";
+
+wfLoadExtension( 'Kartographer' );
+wfLoadExtension( 'EventBus' );
 
 wfLoadExtension( 'SiteMatrix' );
 

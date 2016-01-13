@@ -30,8 +30,8 @@ if ( isset( $_SERVER ) && array_key_exists( 'SERVER_NAME', $_SERVER ) ) {
 }
 
 if ( PHP_SAPI === 'cli' ) {
-	if ( isset( $argv[0] ) && $argv[0] === '--wiki' ) {
-		$wgDBname = $argv[1];
+	if ( isset( $argv[1] ) && $argv[1] === '--wiki' ) {
+		$wgDBname = $argv[2];
 		array_shift( $argv );
 		array_shift( $argv );
 	} else {

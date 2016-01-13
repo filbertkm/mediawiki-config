@@ -3,6 +3,8 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
+putenv( "MW_INSTALL_PATH:$IP" );
+
 $wgScriptPath = "/w";
 $wgArticlePath = "/wiki/$1";
 $wgScriptExtension = ".php";
@@ -90,7 +92,7 @@ $wgDefaultSkin = "vector";
 $wgMetaNamespace = 'Wikidata';
 $wgMetaNamespaceTalk = 'Wikidata_talk';
 
-foreach( array( 'bureaucrat', 'sysop', 'bot' ) as $group ) {
+foreach ( array( 'bureaucrat', 'sysop', 'bot' ) as $group ) {
 	$wgPasswordPolicy['policies'][$group]['MinimalPasswordLength'] = 6;
 }
 
@@ -101,3 +103,17 @@ $wgExtraLanguageNames = array(
 	'din' => 'dinka',
 	'ota' => 'ottoman turkish'
 );
+
+/*
+$wgCrossSiteAJAXdomains = array(
+	'*'
+);
+*/
+
+$wgHooks['RecentChangeTypes'][] = function( &$changeTypes ) {
+	$changeTypes['wikibase'] = array(
+		'rctype' => RC_EXTERNAL,
+		'source' => 'wb',
+		'local' => false
+	);
+};
