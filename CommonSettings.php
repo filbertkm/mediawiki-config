@@ -104,6 +104,8 @@ $wgExtraLanguageNames = array(
 	'ota' => 'ottoman turkish'
 );
 
+$wgRCWatchCategoryMembership = true;
+
 /*
 $wgCrossSiteAJAXdomains = array(
 	'*'

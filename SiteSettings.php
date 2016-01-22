@@ -35,6 +35,7 @@ $wgConf->settings = array(
 	),
 	'wgCanonicalServer' => array(
 		'defulat' => 'http://localhost',
+		'wikidata' => 'http://wikidatawiki',
 		'wikidatawiki' => 'http://wikidatawiki',
 		'enwiki' => 'http://enwiki',
 	),
@@ -45,6 +46,7 @@ $wgConf->settings = array(
 		'enwiki' => 'http://enwiki',
 		'eswiki' => 'http://eswiki',
 		'frwiki' => 'http://frwiki',
+		'wikidata' => 'http://wikidatawiki',
 		'wikidatawiki' => 'http://wikidatawiki',
 	),
 	'wgArticlePath' => array(
@@ -53,10 +55,12 @@ $wgConf->settings = array(
 	'wgSitename' => array(
 		'wikipedia' => 'Wikipedia',
 		'wikisource' => 'Wikisource',
+		'wikidata' => 'Wikidata',
 		'wikidatawiki' => 'Wikidata'
 	),
 	'wmgUseWikibaseRepo' => array(
 		'default' => false,
+		'wikidata' => true,
 		'wikidatawiki' => true,
 	),
 	'wmgUseWikibaseClient' => array(

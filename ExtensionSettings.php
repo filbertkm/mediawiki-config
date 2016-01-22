@@ -59,16 +59,9 @@ $wgJobBackoffThrottling['cirrusSearchLinksUpdate'] = 5000;
 $wgJobBackoffThrottling['cirrusSearchIncomingLinkCount'] = 1;
 $wgCirrusSearchBannedPlugins[] = 'elasticsearch-analysis-hebrew';
 $wgCirrusSearchConnectionAttempts = 3;
-$wgCirrusSearchWikimediaExtraPlugin[ 'id_hash_mod_filter' ] = true;
 
 $wgCirrusSearchServers = array(
 	'localhost',
-);
-
-$wgCirrusSearchCustomFields = array(
-	'content' => array(
-		'kittens' => 'double'
-	)
 );
 
 $wgCirrusSearchWikimediaExtraPlugin = array(
@@ -77,9 +70,64 @@ $wgCirrusSearchWikimediaExtraPlugin = array(
 		'use',
 	),
 	'super_detect_noop' => true,
-	'field_value_factor_with_default' => true,
+	'field_value_factor_with_default' => false,
 	'id_hash_mod_filter' => true,
 );
+
+$wgCirrusSearchRescoreProfiles += array(
+	'wikidata' => array(
+		'supported_namespaces' => array( 0 ),
+		'fallback_profile' => 'default',
+		'rescore' => array(
+			array(
+				'window' => 15000,
+				'window_size_override' => 'CirrusSearchFunctionRescoreWindowSize',
+				'type' => 'function_score',
+				'function_chain' => 'simple_sum',
+				'query_weight' => 0.2,
+				'rescore_query_weight' => 1.2
+			),
+			array(
+				'window' => 15000,
+				'window_size_override' => 'CirrusSearchFunctionRescoreWindowSize',
+				'type' => 'function_score',
+				'function_chain' => 'optional_chain'
+			)
+		)
+	)
+);
+
+$wgCirrusSearchRescoreFunctionScoreChains += array(
+	'simple_sum' => array(
+		'score_mode' => 'sum',
+		'functions' => array(
+			array(
+				'type' => 'custom_field',
+				'params' => array(
+					'field' => 'sitelink_count',
+					'missing' => 0,
+				)
+			),
+			array(
+				'type' => 'custom_field',
+				'params' => array(
+					'field' => 'label_count',
+					'missing' => 0
+				)
+			),
+			array(
+				'type' => 'custom_field',
+				'params' => array(
+					'field' => 'statement_count',
+					'missing' => 0
+				)
+			)
+		)
+	)
+);
+
+$wgCirrusSearchRescoreProfile = $wgCirrusSearchRescoreProfiles['wikidata'];
+#$wgCirrusSearchPrefixSearchRescoreProfile = $wgCirrusSearchRescoreFunctionScoreChains['default'];
 
 require_once "$IP/extensions/PageImages/PageImages.php";
 require_once "$IP/extensions/GeoData/GeoData.php";
@@ -127,11 +175,22 @@ $wgBabelCategoryNames = array(
 	'N' => 'User %code%-N',
 );
 
+require_once "$IP/extensions/VisualEditor/VisualEditor.php";
+
+$wgVirtualRestConfig['modules']['parsoid'] = array(
+	// URL to the Parsoid instance
+	// Use port 8142 if you use the Debian package
+	'url' => 'http://localhost:8000',
+	// Parsoid "domain", see below (optional)
+	'domain' => 'enwiki',
+	// Parsoid "prefix", see below (optional)
+	'prefix' => 'enwiki'
+);
+
 require_once __DIR__ . "/Wikibase.php";
 
 wfLoadExtension( 'TemplateData' );
-wfLoadExtension( 'Conference' );
-wfLoadExtension( 'Disambiguator' );
+// wfLoadExtension( 'Disambiguator' );
 
 require_once "$IP/extensions/Flow/Flow.php";
 
@@ -150,7 +209,8 @@ $wgMathFullRestbaseURL= 'https://api.formulasearchengine.com/';
 # require_once "$IP/extensions/WikiStream/WikiStream.php";
 
 wfLoadExtension( 'Kartographer' );
-wfLoadExtension( 'EventBus' );
+
+require_once "$IP/extensions/AntiSpoof/AntiSpoof.php";
 
 wfLoadExtension( 'SiteMatrix' );
 

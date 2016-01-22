@@ -74,10 +74,26 @@ if ( $wmgUseWikibaseRepo ) {
 		'P113'
 	);
 
+	$wgWBRepoSettings['disabledDataTypes'] = array(
+//		'external-id'
+	);
+
 	$wgWBRepoSettings['conceptBaseUri'] = 'http://www.wikidata.org/entity/';
+
+	$wgWBRepoSettings['statementSections'] = array(
+		'item' => array(
+			'statements' => null,
+			'identifiers' => array(
+				'type' => 'dataType',
+				'dataTypes' => array( 'string' ),
+			)
+		)
+	);
 }
 
 if ( $wmgUseWikibaseClient ) {
+	require_once "$IP/extensions/Wikidata/extensions/WikibaseVE/WikibaseVE.php";
+
 	$wgWBClientSettings['siteGlobalID'] = $wgDBname;
 
 	$wgWBClientSettings['changesDatabase'] = 'wikidatawiki';
@@ -113,34 +129,6 @@ if ( $wmgUseWikibaseClient ) {
 	);
 
 	$wgWBClientSettings['otherProjectsLinksByDefault'] = true;
+
+	$wgWikimediaBadgesCommonsCategoryProperty = 'P37';
 }
-
-$wgHooks['WikibaseClientOtherProjectsSidebar'][] = function( &$sidebar ) {
-	foreach ( $sidebar as $key => $params ) {
-		if ( isset( $params['msg'] ) && $params['msg'] === 'wikibase-otherprojects-commons' ) {
-			$client = \Wikibase\Client\WikibaseClient::getDefaultInstance();
-
-			$entityIdLookup = $client->getStore()->getEntityIdLookup();
-			$entityLookup = $client->getStore()->getEntityLookup();
-
-			$title = RequestContext::getMain()->getTitle();
-			$entityId = $entityIdLookup->getEntityIdForTitle( $title );
-
-			$entity = $entityLookup->getEntity( $entityId );
-			$statements = $entity->getStatements()->getByPropertyId(
-				new \Wikibase\DataModel\Entity\PropertyId( 'P37' )
-			);
-
-			foreach ( $statements as $statement ) {
-				$mainSnak = $statement->getMainSnak();
-				$value = str_replace( ' ', '_', $mainSnak->getDataValue()->getValue() );
-				$sidebar[$key]['href'] = 'https://commons.wikimedia.org/wiki/Category:' . $value;
-
-				return true;
-			}
-		}
-	}
-
-	return true;
-};
-
