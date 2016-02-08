@@ -65,7 +65,21 @@ $wgConf->settings = array(
 	),
 	'wmgUseWikibaseClient' => array(
 		'default' => true
-	)
+	),
+	'wmgMFQueryPropModules' => array(
+		// workaround for T125672
+		'default' => array( 'pageprops' ),
+		'wikidatawiki' => array( 'pageprops', 'pageterms' ),
+	),
+	'wmgMFSearchAPIParams' => array(
+		// workaround for T125672, though also fixes T120197
+		'default' => array(
+			'ppprop' => 'displaytitle'
+		),
+		'wikidatawiki' => array(
+			'wbptterms' => 'label'
+		)
+	),
 );
 
 $wgLocalDatabases =& $wgConf->getLocalDatabases();

@@ -74,60 +74,64 @@ $wgCirrusSearchWikimediaExtraPlugin = array(
 	'id_hash_mod_filter' => true,
 );
 
-$wgCirrusSearchRescoreProfiles += array(
-	'wikidata' => array(
-		'supported_namespaces' => array( 0 ),
-		'fallback_profile' => 'default',
-		'rescore' => array(
-			array(
-				'window' => 15000,
-				'window_size_override' => 'CirrusSearchFunctionRescoreWindowSize',
-				'type' => 'function_score',
-				'function_chain' => 'simple_sum',
-				'query_weight' => 0.2,
-				'rescore_query_weight' => 1.2
-			),
-			array(
-				'window' => 15000,
-				'window_size_override' => 'CirrusSearchFunctionRescoreWindowSize',
-				'type' => 'function_score',
-				'function_chain' => 'optional_chain'
-			)
-		)
-	)
-);
+if ( $wgDBname === 'wikidatawiki' ) {
 
-$wgCirrusSearchRescoreFunctionScoreChains += array(
-	'simple_sum' => array(
-		'score_mode' => 'sum',
-		'functions' => array(
-			array(
-				'type' => 'custom_field',
-				'params' => array(
-					'field' => 'sitelink_count',
-					'missing' => 0,
-				)
-			),
-			array(
-				'type' => 'custom_field',
-				'params' => array(
-					'field' => 'label_count',
-					'missing' => 0
-				)
-			),
-			array(
-				'type' => 'custom_field',
-				'params' => array(
-					'field' => 'statement_count',
-					'missing' => 0
+	$wgCirrusSearchRescoreProfiles += array(
+		'wikidata' => array(
+			'supported_namespaces' => array( 0 ),
+			'fallback_profile' => 'default',
+			'rescore' => array(
+				array(
+					'window' => 15000,
+					'window_size_override' => 'CirrusSearchFunctionRescoreWindowSize',
+					'type' => 'function_score',
+					'function_chain' => 'simple_sum',
+					'query_weight' => 0.2,
+					'rescore_query_weight' => 1.2
+				),
+				array(
+					'window' => 15000,
+					'window_size_override' => 'CirrusSearchFunctionRescoreWindowSize',
+					'type' => 'function_score',
+					'function_chain' => 'optional_chain'
 				)
 			)
 		)
-	)
-);
+	);
 
-$wgCirrusSearchRescoreProfile = $wgCirrusSearchRescoreProfiles['wikidata'];
-#$wgCirrusSearchPrefixSearchRescoreProfile = $wgCirrusSearchRescoreFunctionScoreChains['default'];
+	$wgCirrusSearchRescoreFunctionScoreChains += array(
+		'simple_sum' => array(
+			'score_mode' => 'sum',
+			'functions' => array(
+				array(
+					'type' => 'custom_field',
+					'params' => array(
+						'field' => 'sitelink_count',
+						'missing' => 0,
+					)
+				),
+				array(
+					'type' => 'custom_field',
+					'params' => array(
+						'field' => 'label_count',
+						'missing' => 0
+					)
+				),
+				array(
+					'type' => 'custom_field',
+					'params' => array(
+						'field' => 'statement_count',
+						'missing' => 0
+					)
+				)
+			)
+		)
+	);
+
+	$wgCirrusSearchRescoreProfile = $wgCirrusSearchRescoreProfiles['wikidata'];
+	#$wgCirrusSearchPrefixSearchRescoreProfile = $wgCirrusSearchRescoreFunctionScoreChains['default'];
+
+}
 
 require_once "$IP/extensions/PageImages/PageImages.php";
 require_once "$IP/extensions/GeoData/GeoData.php";
@@ -151,12 +155,14 @@ $wgMobileFrontendLogo = '/../images/mobile/wikidata.png';
 require_once "$IP/extensions/ZeroBanner/ZeroBanner.php";
 require_once "$IP/extensions/ZeroPortal/ZeroPortal.php";
 
-if ( isset( $wgMFQueryPropModules ) && !in_array( 'pageterms', $wgMFQueryPropModules ) ) {
-	$wgMFQueryPropModules[] = 'pageterms';
-}
+$wgMFQueryPropModules = $wmgMFQueryPropModules;
+$wgMFSearchAPIParams = $wmgMFSearchAPIParams;
 
-if ( isset( $wgMFSearchAPIParams ) ) {
-	$wgMFSearchAPIParams['wbptterms'] = array( 'label' );
+if ( $wgDBname === 'wikidatawiki' ) {
+	$wgMFSearchGenerator = array(
+		'name' => 'wbsearch',
+		'prefix' => 'wbs'
+	);
 }
 
 require_once "$IP/extensions/Babel/Babel.php";

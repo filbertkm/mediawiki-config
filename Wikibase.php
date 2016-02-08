@@ -92,7 +92,7 @@ if ( $wmgUseWikibaseRepo ) {
 }
 
 if ( $wmgUseWikibaseClient ) {
-	require_once "$IP/extensions/Wikidata/extensions/WikibaseVE/WikibaseVE.php";
+	// require_once "$IP/extensions/Wikidata/extensions/WikibaseVE/WikibaseVE.php";
 
 	$wgWBClientSettings['siteGlobalID'] = $wgDBname;
 
