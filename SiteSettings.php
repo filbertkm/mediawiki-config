@@ -69,7 +69,7 @@ $wgConf->settings = array(
 	'wmgMFQueryPropModules' => array(
 		// workaround for T125672
 		'default' => array( 'pageprops' ),
-		'wikidatawiki' => array( 'pageprops', 'pageterms' ),
+		'wikidatawiki' => array( 'pageterms' ),
 	),
 	'wmgMFSearchAPIParams' => array(
 		// workaround for T125672, though also fixes T120197
@@ -78,6 +78,7 @@ $wgConf->settings = array(
 		),
 		'wikidatawiki' => array(
 			'wbptterms' => 'label'
+
 		)
 	),
 );

@@ -85,9 +85,9 @@ if ( $wgDBname === 'wikidatawiki' ) {
 					'window' => 15000,
 					'window_size_override' => 'CirrusSearchFunctionRescoreWindowSize',
 					'type' => 'function_score',
-					'function_chain' => 'simple_sum',
-					'query_weight' => 0.2,
-					'rescore_query_weight' => 1.2
+					'function_chain' => 'wikibase_avg',
+					'query_weight' => 1.2,
+					'rescore_query_weight' => 0.01
 				),
 				array(
 					'window' => 15000,
@@ -100,8 +100,8 @@ if ( $wgDBname === 'wikidatawiki' ) {
 	);
 
 	$wgCirrusSearchRescoreFunctionScoreChains += array(
-		'simple_sum' => array(
-			'score_mode' => 'sum',
+		'wikibase_avg' => array(
+			'score_mode' => 'avg',
 			'functions' => array(
 				array(
 					'type' => 'custom_field',
@@ -129,7 +129,7 @@ if ( $wgDBname === 'wikidatawiki' ) {
 	);
 
 	$wgCirrusSearchRescoreProfile = $wgCirrusSearchRescoreProfiles['wikidata'];
-	#$wgCirrusSearchPrefixSearchRescoreProfile = $wgCirrusSearchRescoreFunctionScoreChains['default'];
+	// $wgCirrusSearchPrefixSearchRescoreProfile = $wgCirrusSearchRescoreFunctionScoreChains['default'];
 
 }
 
@@ -155,8 +155,9 @@ $wgMobileFrontendLogo = '/../images/mobile/wikidata.png';
 require_once "$IP/extensions/ZeroBanner/ZeroBanner.php";
 require_once "$IP/extensions/ZeroPortal/ZeroPortal.php";
 
-$wgMFQueryPropModules = $wmgMFQueryPropModules;
+//$wgMFQueryPropModules = $wmgMFQueryPropModules;
 $wgMFSearchAPIParams = $wmgMFSearchAPIParams;
+$wgMFSearchUseDisplayTitle = false;
 
 if ( $wgDBname === 'wikidatawiki' ) {
 	$wgMFSearchGenerator = array(
@@ -215,6 +216,7 @@ $wgMathFullRestbaseURL= 'https://api.formulasearchengine.com/';
 # require_once "$IP/extensions/WikiStream/WikiStream.php";
 
 wfLoadExtension( 'Kartographer' );
+# wfLoadExtension( 'ORES' );
 
 require_once "$IP/extensions/AntiSpoof/AntiSpoof.php";
 
