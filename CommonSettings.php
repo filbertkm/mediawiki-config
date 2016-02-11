@@ -112,6 +112,8 @@ $wgCrossSiteAJAXdomains = array(
 );
 */
 
+$wgGroupPermissions['sysop']['editcontentmodel'] = true;
+
 $wgHooks['RecentChangeTypes'][] = function( &$changeTypes ) {
 	$changeTypes['wikibase'] = array(
 		'rctype' => RC_EXTERNAL,

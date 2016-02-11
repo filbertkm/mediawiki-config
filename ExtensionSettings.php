@@ -76,6 +76,8 @@ $wgCirrusSearchWikimediaExtraPlugin = array(
 
 if ( $wgDBname === 'wikidatawiki' ) {
 
+	// $wgCirrusSearchNearMatchWeight = 2;
+
 	$wgCirrusSearchRescoreProfiles += array(
 		'wikidata' => array(
 			'supported_namespaces' => array( 0 ),
@@ -199,7 +201,12 @@ require_once __DIR__ . "/Wikibase.php";
 wfLoadExtension( 'TemplateData' );
 // wfLoadExtension( 'Disambiguator' );
 
+require_once "$IP/extensions/Echo/Echo.php";
 require_once "$IP/extensions/Flow/Flow.php";
+
+$wgNamespaceContentModels[NS_PROJECT_TALK] = CONTENT_MODEL_FLOW_BOARD;
+$wgNamespaceContentModels[NS_USER_TALK] = CONTENT_MODEL_FLOW_BOARD;
+$wgGroupPermissions['sysop']['flow-create-board'] = true;
 
 require_once "$IP/extensions/WikibaseImport/WikibaseImport.php";
 require_once "$IP/extensions/WikidataQuery/WikidataQuery.php";
