@@ -40,9 +40,9 @@ $wgCodeEditorEnableCore = true;
 
 $wgScribuntoUseGeSHi = true;
 $wgScribuntoUseCodeEditor = true;
+$wgScribuntoDefaultEngine = 'luasandbox';
 
 require_once "$IP/extensions/UniversalLanguageSelector/UniversalLanguageSelector.php";
-
 require_once "$IP/extensions/Gadgets/Gadgets.php";
 
 require_once "$IP/extensions/Elastica/Elastica.php";
@@ -199,19 +199,25 @@ $wgVirtualRestConfig['modules']['parsoid'] = array(
 require_once __DIR__ . "/Wikibase.php";
 
 wfLoadExtension( 'TemplateData' );
+wfLoadExtension( 'Citoid' );
+
+$wgCitoidServiceUrl = 'http://localhost:1970/api';
+
 // wfLoadExtension( 'Disambiguator' );
 
 require_once "$IP/extensions/Echo/Echo.php";
+
+/**
 require_once "$IP/extensions/Flow/Flow.php";
 
 $wgNamespaceContentModels[NS_PROJECT_TALK] = CONTENT_MODEL_FLOW_BOARD;
 $wgNamespaceContentModels[NS_USER_TALK] = CONTENT_MODEL_FLOW_BOARD;
 $wgGroupPermissions['sysop']['flow-create-board'] = true;
+*/
 
-require_once "$IP/extensions/WikibaseImport/WikibaseImport.php";
-require_once "$IP/extensions/WikidataQuery/WikidataQuery.php";
+// require_once "$IP/extensions/WikibaseImport/WikibaseImport.php";
+// require_once "$IP/extensions/WikidataQuery/WikidataQuery.php";
 
-require_once "$IP/extensions/TemplateData/TemplateData.php";
 require_once "$IP/extensions/AbuseFilter/AbuseFilter.php";
 
 require_once "$IP/extensions/Math/Math.php";

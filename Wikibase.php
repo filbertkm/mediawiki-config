@@ -11,21 +11,31 @@ if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 }
 
 if ( $wmgUseWikibaseRepo ) {
+	wfLoadExtension( 'WikibaseElastic', "$IP/extensions/Wikidata/extensions/WikibaseElastic/extension.json" );
+
 	$baseNs = 120;
 
 	// NOTE: do *not* define WB_NS_ITEM and WB_NS_ITEM_TALK when using a core namespace for items!
 	define( 'WB_NS_PROPERTY', $baseNs +2 );
 	define( 'WB_NS_PROPERTY_TALK', $baseNs +3 );
+	define( 'WB_NS_MEDIAINFO', $baseNs + 4 );
+	define( 'WB_NS_MEDIAINFO_TALK', $baseNs + 5 );
+
+	define( 'CONTENT_MODEL_MEDIAINFO', "wikibase-mediainfo" );
 
 	// No extra namespace for items, using a core namespace for that.
 	$wgExtraNamespaces[WB_NS_PROPERTY] = 'Property';
 	$wgExtraNamespaces[WB_NS_PROPERTY_TALK] = 'Property_talk';
 
-	// Tell Wikibase which namespace to use for which kind of entity
-	$wgWBRepoSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_ITEM] = NS_MAIN;
-	$wgWBRepoSettings['entityNamespaces'][CONTENT_MODEL_WIKIBASE_PROPERTY] = WB_NS_PROPERTY;
+	$wgExtraNamespaces[WB_NS_MEDIAINFO] = 'MediaInfo';
+	$wgExtraNamespaces[WB_NS_MEDIAINFO_TALK] = 'MediaInfo_talk';
 
-	require_once "$IP/extensions/WikibaseElastic/WikibaseElastic.php";
+	// Tell Wikibase which namespace to use for which kind of entity
+	$wgWBRepoSettings['entityNamespaces'] = array(
+		CONTENT_MODEL_WIKIBASE_ITEM => NS_MAIN,
+		CONTENT_MODEL_WIKIBASE_PROPERTY => WB_NS_PROPERTY,
+		CONTENT_MODEL_MEDIAINFO => WB_NS_MEDIAINFO
+	);
 
 	$wgWBRepoSettings['clientDbList'] = array( 'enwiki', 'arwiki', 'dewiki', 'eswiki', 'frwiki' );
 	$wgWBRepoSettings['subscriptionLookupMode'] = 'subscriptions+sitelinks';

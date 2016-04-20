@@ -26,6 +26,9 @@ $wgConf->settings = array(
 	'wmgUseWikibaseQuality' => array(
 		'default' => true,
 	),
+	'wmgUseArticlePlaceholder' => array(
+		'enwiki' => true,
+	),
 	'wgLanguageCode' => array(
 		'default' => 'en',
 		'arwiki' => 'ar',
