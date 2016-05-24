@@ -17,7 +17,7 @@ $wgGraphDataDomains = array(
 	'www.mediawiki.org'
 );
 
-#require_once "$IP/extensions/SpamBlacklist/SpamBlacklist.php";
+require_once "$IP/extensions/SpamBlacklist/SpamBlacklist.php";
 
 require_once "$IP/extensions/AntiSpoof/AntiSpoof.php";
 require_once "$IP/extensions/AbuseFilter/AbuseFilter.php";
@@ -215,7 +215,7 @@ $wgNamespaceContentModels[NS_USER_TALK] = CONTENT_MODEL_FLOW_BOARD;
 $wgGroupPermissions['sysop']['flow-create-board'] = true;
 */
 
-// require_once "$IP/extensions/WikibaseImport/WikibaseImport.php";
+require_once "$IP/extensions/Wikidata/extensions/Import/WikibaseImport.php";
 // require_once "$IP/extensions/WikidataQuery/WikidataQuery.php";
 
 require_once "$IP/extensions/AbuseFilter/AbuseFilter.php";
@@ -233,6 +233,7 @@ wfLoadExtension( 'Kartographer' );
 
 require_once "$IP/extensions/AntiSpoof/AntiSpoof.php";
 
+wfLoadExtension( 'WikimediaSites' );
 wfLoadExtension( 'SiteMatrix' );
 
 $wgSiteMatrixFile = '/home/katie/src/mediawiki-config/dblists/langlist';
@@ -241,3 +242,4 @@ $wgSiteMatrixPrivateSites = '/home/katie/src/mediawiki-config/dblists/private.db
 $wgSiteMatrixFishbowlSites = '/home/katie/src/mediawiki-config/dblists/fishbowl.dblist';
 
 require_once "$IP/extensions/WikimediaMessages/WikimediaMessages.php";
+

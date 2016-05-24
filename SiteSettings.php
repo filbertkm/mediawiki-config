@@ -40,7 +40,7 @@ $wgConf->settings = array(
 		'defulat' => 'http://localhost',
 		'wikidata' => 'http://wikidatawiki',
 		'wikidatawiki' => 'http://wikidatawiki',
-		'enwiki' => 'http://enwiki',
+		'enwiki' => 'http://enwiki'
 	),
 	'wgServer' => array(
 		'default' => 'http://localhost',

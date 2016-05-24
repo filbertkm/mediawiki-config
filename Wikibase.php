@@ -1,17 +1,13 @@
 <?php
 
-require_once "$IP/extensions/WikimediaMessages/WikimediaMessages.php";
-
 if ( $wmgUseWikibaseRepo || $wmgUseWikibaseClient ) {
 	define( 'INSTANCE_OF_PID', 'P4' );
 	define( 'IDENTIFIER_PROPERTY_QID', 'Q9791' );
 	define( 'STATED_IN_PID', 'P31' );
 
 	require_once "$IP/extensions/Wikidata/Wikidata.php";
-}
 
-if ( $wmgUseWikibaseRepo ) {
-	wfLoadExtension( 'WikibaseElastic', "$IP/extensions/Wikidata/extensions/WikibaseElastic/extension.json" );
+	define( 'CONTENT_MODEL_MEDIAINFO', "wikibase-mediainfo" );
 
 	$baseNs = 120;
 
@@ -21,21 +17,36 @@ if ( $wmgUseWikibaseRepo ) {
 	define( 'WB_NS_MEDIAINFO', $baseNs + 4 );
 	define( 'WB_NS_MEDIAINFO_TALK', $baseNs + 5 );
 
-	define( 'CONTENT_MODEL_MEDIAINFO', "wikibase-mediainfo" );
+	// Tell Wikibase which namespace to use for which kind of entity
+	$wgWBEntityNamespaces = array(
+		'wikibase-item' => NS_MAIN, // CONTENT_MODEL_WIKIBASE_ITEM
+		'wikibase-property' => WB_NS_PROPERTY, // CONTENT_MODEL_WIKIBASE_PROPERTY
+		'wikibase-mediainfo' => WB_NS_MEDIAINFO // CONTENT_MODEL_WIKIBASE_MEDIAINFO
+	);
+}
+
+if ( $wmgUseWikibaseRepo ) {
+//	wfLoadExtension( 'WikibaseElastic', "$IP/extensions/Wikidata/extensions/WikibaseElastic/extension.json" );
 
 	// No extra namespace for items, using a core namespace for that.
 	$wgExtraNamespaces[WB_NS_PROPERTY] = 'Property';
 	$wgExtraNamespaces[WB_NS_PROPERTY_TALK] = 'Property_talk';
-
 	$wgExtraNamespaces[WB_NS_MEDIAINFO] = 'MediaInfo';
 	$wgExtraNamespaces[WB_NS_MEDIAINFO_TALK] = 'MediaInfo_talk';
 
-	// Tell Wikibase which namespace to use for which kind of entity
-	$wgWBRepoSettings['entityNamespaces'] = array(
-		CONTENT_MODEL_WIKIBASE_ITEM => NS_MAIN,
-		CONTENT_MODEL_WIKIBASE_PROPERTY => WB_NS_PROPERTY,
-		CONTENT_MODEL_MEDIAINFO => WB_NS_MEDIAINFO
-	);
+	$wgWBRepoSettings['entityNamespaces'] = $wgWBEntityNamespaces;
+
+	$wgGroupPermissions['*']['mediainfo-term'] = true;
+	$wgGroupPermissions['*']['mediainfo-merge'] = true;
+	$wgGroupPermissions['*']['mediainfo-redirect'] = true;
+
+	$wgAvailableRights[] = 'mediainfo-term';
+	$wgAvailableRights[] = 'mediainfo-merge';
+	$wgAvailableRights[] = 'mediainfo-redirect';
+
+	$wgGrantPermissions['editpage']['mediainfo-term'] = true;
+	$wgGrantPermissions['editpage']['mediainfo-redirect'] = true;
+	$wgGrantPermissions['editpage']['mediainfo-merge'] = true;
 
 	$wgWBRepoSettings['clientDbList'] = array( 'enwiki', 'arwiki', 'dewiki', 'eswiki', 'frwiki' );
 	$wgWBRepoSettings['subscriptionLookupMode'] = 'subscriptions+sitelinks';
@@ -46,13 +57,13 @@ if ( $wmgUseWikibaseRepo ) {
 	);
 
 	$wgWBRepoSettings['siteLinkGroups'] = array(
-	    'wikipedia',
-	    'wikibooks',
+		'wikipedia',
+		'wikibooks',
 	   	'wikinews',
-	    'wikiquote',
-	    'wikisource',
-	    'wikivoyage',
-	    'special'
+		'wikiquote',
+		'wikisource',
+		'wikivoyage',
+		'special'
 	);
 
 	$wgWBRepoSettings['specialSiteLinkGroups'] = array(
@@ -106,6 +117,8 @@ if ( $wmgUseWikibaseClient ) {
 
 	$wgWBClientSettings['siteGlobalID'] = $wgDBname;
 
+	$wgWBClientSettings['entityNamespaces'] = $wgWBEntityNamespaces;
+
 	$wgWBClientSettings['changesDatabase'] = 'wikidatawiki';
 	$wgWBClientSettings['repoDatabase'] = 'wikidatawiki';
 	$wgWBClientSettings['repoUrl'] = 'http://wikidatawiki';
@@ -119,13 +132,13 @@ if ( $wmgUseWikibaseClient ) {
 	);
 
 	$wgWBClientSettings['siteLinkGroups'] = array(
-	    'wikipedia',
-	    'wikibooks',
-	    'wikinews',
-	    'wikiquote',
-	    'wikisource',
-	    'wikivoyage',
-	    'special'
+		'wikipedia',
+		'wikibooks',
+		'wikinews',
+		'wikiquote',
+		'wikisource',
+		'wikivoyage',
+		'special'
 	);
 
 	$wgWBClientSettings['badgeClassNames'] = array(

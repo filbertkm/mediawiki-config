@@ -12,18 +12,6 @@ if ( isset( $_SERVER ) && array_key_exists( 'SERVER_NAME', $_SERVER ) ) {
 		case 'enwiki':
 			$wgDBname = 'enwiki';
 			break;
-		case 'arwiki':
-			$wgDBname = 'arwiki';
-			break;
-		case 'dewiki':
-			$wgDBname = 'dewiki';
-			break;
-		case 'eswiki':
-			$wgDBname = 'eswiki';
-			break;
-		case 'frwiki':
-			$wgDBname = 'frwiki';
-			break;
 		default:
 			$wgDBname = 'wikidatawiki';
 			break;
@@ -44,10 +32,14 @@ if ( $wgDBname === 'wikidatawiki' ) {
 	$wmgUseWikibaseMediaInfo = true;
 }
 
+$wgLanguageCode = 'es';
+
 require_once __DIR__ . '/DebugSettings.php';
 require_once __DIR__ . '/SiteSettings.php';
 require_once __DIR__ . '/CommonSettings.php';
 require_once __DIR__ . '/Logging.php';
+
+$wgLanguageCode = 'es';
 
 /*
 $wgDBtype = "sqlite";

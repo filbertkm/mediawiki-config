@@ -47,6 +47,8 @@ $wgDBmysql5 = false;
 $wgMainCacheType	= CACHE_MEMCACHED;
 $wgMemCachedServers = array( '127.0.0.1:11211' );
 
+//$wgLocalisationCacheConf['manualRecache'] = true;
+
 ## To enable image uploads, make sure the 'images' directory
 ## is writable, then set this to true:
 $wgEnableUploads = true;
